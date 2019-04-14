@@ -1,0 +1,14 @@
+### Starting build.
+# Target: state.mli.depends, tags: { extension:mli, file:state.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules state.mli > state.mli.depends
+# Target: state.cmi, tags: { byte, compile, extension:mli, file:state.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -o state.cmi state.mli
+# Target: state.ml.depends, tags: { extension:ml, file:state.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules state.ml > state.ml.depends
+# Target: state.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -o state.cmo state.ml
++ ocamlfind ocamlc -c -o state.cmo state.ml
+File "state.ml", line 1, characters 5-10:
+Error: Unbound module Board
+Command exited with code 2.
+# Compilation unsuccessful.
