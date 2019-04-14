@@ -1,5 +1,3 @@
-open Board
-
 type t = {
   board: Board.t;
   current: string
@@ -12,17 +10,20 @@ let init_state = {
   current = "R"
 }
 
+let current_player st =
+  st.current
+
 let next_player st = 
-  if st.current = "R" then {st with current = "B"} else {st with current = "R"}
+  if st.current = "R" then "B" else "R"
 
 let game_state st = 
   match check_win st.board with
   | Some c -> true
   | None -> false
 
-let go board column color = 
-  if is_full_col column then Legal ({
-      board: Board.make_move board column color;
-      current: color
+let go board column state = 
+  if not (is_full_col column) then Legal ({
+      board: Board.make_move board column (current_player state);
+      current: next_player state
     })
   else Illegal
