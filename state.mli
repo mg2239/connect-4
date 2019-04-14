@@ -1,3 +1,5 @@
+open Board
+
 (* The type for a game state *)
 type t
 
