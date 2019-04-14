@@ -21,7 +21,7 @@ let get_as_list board =
     else board.(acc)::(loop (acc+1)) in
   loop 0
 
-let checkwin board = failwith "unimplemented"
+let check_win board = failwith "unimplemented"
 
 let filled_slots board = 
   let rec loop count =
@@ -31,6 +31,6 @@ let filled_slots board =
 
 let is_full board = filled_slots board = 42
 
-let is_full_column board column = List.length (board.(column))
+let is_full_column board column = (List.length (board.(column))) = 7
 
 let ascii_art board = failwith "unimplemented"

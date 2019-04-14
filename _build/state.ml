@@ -2,27 +2,30 @@ open Board
 
 type t = {
   board: Board.t;
-  current: string
+  current: color
 }
 
 type result = Legal of t | Illegal
 
 let init_state = {
   board = Board.empty;
-  current = "R"
+  current = R
 }
 
+let current_player st =
+  st.current
+
 let next_player st = 
-  if st.current = "R" then {st with current = "B"} else {st with current = "R"}
+  if st.current = R then B else R
 
-let game_state b = 
-  match check_win b with
-  | Some c -> true
-  | None -> false
+let game_state st = 
+  match check_win st.board with
+  | Some c -> false
+  | None -> true
 
-let go board column color = 
-  if is_full_col column then Legal ({
-      board: Board.make_move board column color;
-      current: color
+let go board column state = 
+  if not (is_full_column board column) then Legal ({
+      board = (make_move board column state.current);
+      current = next_player state
     })
   else Illegal
