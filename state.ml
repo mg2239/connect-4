@@ -18,8 +18,8 @@ let next_player st =
 
 let game_state st = 
   match check_win st.board with
-  | Some c -> true
-  | None -> false
+  | Some c -> false
+  | None -> true
 
 let go board column state = 
   if not (is_full_col column) then Legal ({
