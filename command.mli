@@ -10,7 +10,7 @@ type command =
   | Help
 
 
-(** Raised when an malformed command is parsed. *)
+(** Raised when an empty or malformed command is parsed. *)
 exception Malformed
 
 
