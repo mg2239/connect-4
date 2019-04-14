@@ -9,7 +9,7 @@ type t
 (**[color] represents the colors of a disk. R is a red disk, B is a black disk
    and Emp signifies there is no disk at that position in the board.
 *)
-type color = R | B | Emp
+type color = R | B 
 
 (**[empty] is the empty board where no moves have been made. It is the initial
    state of the board in a game.
@@ -23,8 +23,8 @@ val empty : t
 val make_move : t -> int -> color -> t
 
 (**[get_as_list board] is the current state of the board represented as a 
-   2 dimensional list of type [color]. The ith row in the jth column is R
-   if and only if there is a red disk at that postion in the board.
+   2 dimensional list of type [color]. The head of a column list is the top disk
+   in that list. Each column list has a length of at most 6. 
 *)
 val get_as_list : t -> (color list) list
 
