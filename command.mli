@@ -18,7 +18,7 @@ exception Malformed
     word (consecutive sequence of non-space characters) of [str] becomes 
     the verb. The rest, if any, becomes the position.
     Examples: 
-    - [parse "    go   6   black  "] is [Go (6, "black")]
+    - [parse "    go   6   B  "] is [Go (6, "B")]
     - [parse "help"] is [Help]
       Requires: [str] contains only a-z, 0-9, and space 
       characters (only ASCII character code 32; not tabs or newlines, etc.).
