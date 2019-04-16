@@ -3,17 +3,15 @@ open Board
 open State
 open OUnit2
 
-(** [make_test_board_make_move name board column color expected_output] 
+(** [make_test_board_get_as_list name board expected_output] 
     constructs an OUnit test named [name] that asserts the quality of 
-    [expected_output] with [make_move board column color] *)
+    [expected_output] with [get_as_list board] *)
 let make_test_board_get_as_list
     (name: string)
     (board: Board.t)
-    (column: int)
-    (color: Board.color)
-    (expected_output: Board.t) : test =
+    (expected_output: (color list) list) : test =
   name >:: (fun _ -> assert_equal 
-               expected_output (make_move board column color))
+               expected_output (get_as_list board))
 
 
 
