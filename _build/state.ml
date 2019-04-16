@@ -23,9 +23,9 @@ let game_state st =
   | Some c -> false
   | None -> true
 
-let go board column state = 
-  if not (is_full_column board column) then Legal ({
-      board = (make_move board column state.current);
-      current = next_player state
+let go b col st = 
+  if not (is_full_column b col) then Legal ({
+      board = (make_move b col st.current);
+      current = next_player st
     })
   else Illegal
