@@ -1,9 +1,11 @@
 type color = R | B | Emp
 
-(**AF: the board is represented as an array of length 7, where each element is a
-   color list. The head of each list represents the top disk in that row. If there
-   is no disk in that row, the list is the empty list[]
-   RI: All of the lists representing columns have at most 6 elements
+(**AF: the board is represented as a 2d array of size 7x6 (columns x rows) where
+   each array element represents a position in th board. Each array element is 
+   of type color.
+   RI: In a single column, there cannot be an Emp sandwiched between two colored
+   disks. That is, the subarrays R; Emp; R, R; Emp B, B; Emp; R, B; Emp; B, are
+   all invalid 
 *)
 type t = color array array
 
@@ -27,11 +29,10 @@ let make_move board column color =
 let get_as_list board = 
   let rec loop acc =
     if acc = 7 then []
-    else board.(acc)::(loop (acc+1)) in
+    else Array.to_list(board.(acc))::(loop (acc+1)) in
   loop 0
 
-let checkwin board =
-
+let check_win board =
   let check_rows grid = 
     let rec loop r =
       if r=4 then None
@@ -39,7 +40,6 @@ let checkwin board =
               && grid.(2).(r)=grid.(3).(r) then Some (grid.(0).(r))
       else loop (r+1) in
     loop 0 in 
-
   let check_cols grid = 
     let rec loop c = 
       if c=4 then None
@@ -47,7 +47,6 @@ let checkwin board =
               && grid.(c).(2)=grid.(c).(3) then Some (grid.(c).(0))
       else loop (c+1) in 
     loop 0 in
-
   let check_diags grid = 
     if grid.(0).(3)=grid.(1).(2) && grid.(1).(2)=grid.(2).(1)
        && grid.(2).(1)=grid.(3).(3) then Some (grid.(0).(3))
@@ -55,7 +54,6 @@ let checkwin board =
             && grid.(2).(2)=grid.(3).(3) then Some (grid.(0).(0))
     else None
   in 
-
   let check_subgrids = 
     (*loop through columns (0-3) *)
     let rec loopcols colmarker = 
