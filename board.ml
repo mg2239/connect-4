@@ -78,15 +78,19 @@ let check_win board =
   in
   check_subgrids
 
-let filled_slots board = 
-  let rec loop count =
-    if count = 7 then 0
-    else Array.length (board.(count)) + loop (count + 1) in
+let filled_slots_helper column  = 
+  let rec loop counter =
+    if counter = 6 then 0
+    else if column.(counter) <> Emp then 1 + loop (counter+1)
+    else loop (counter+1) in 
   loop 0
+
+let filled_slots board = 
+  Array.fold_left (fun acc col -> (filled_slots_helper col) + acc) 0 board
 
 let is_full board = filled_slots board = 42
 
-let is_full_column board column = Array.length (board.(column)) = 6
+let is_full_column board column = not (Array.mem Emp (board.(column)))
 
 let ascii_art board =
   let rec looprows r = 
