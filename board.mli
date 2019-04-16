@@ -9,7 +9,7 @@ type t
 (**[color] represents the colors of a disk. R is a red disk, B is a black disk
    and Emp signifies there is no disk at that position in the board.
 *)
-type color = R | B 
+type color = R | B | Emp
 
 (**[empty] is the empty board where no moves have been made. It is the initial
    state of the board in a game.
