@@ -32,7 +32,7 @@ let get_as_list board =
     else Array.to_list(board.(acc))::(loop (acc+1)) in
   loop 0
 
-let checkwin board =
+let check_win board =
 
   let check_rows grid = 
     let rec loop r =
