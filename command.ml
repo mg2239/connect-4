@@ -1,4 +1,4 @@
-type position = int * string
+type position = int
 
 type command = 
   | Go of position
@@ -12,13 +12,12 @@ let parse str =
   let filtered_lst = List.filter check_empty str_lst in 
   match filtered_lst with
   | h::[] -> if h = "help" then Help else raise Malformed
-  | h1::h2::h3::[] -> begin
+  | h1::h2::[] -> begin
       let column = begin 
         try int_of_string h2 with
         | Failure t -> 7
       end in 
-      let color = h3 in
-      if column < 7 && (color = "R" || color = "B") then Go(column, color)
+      if column < 7 then Go (column)
       else raise Malformed 
     end 
   | _ -> raise Malformed

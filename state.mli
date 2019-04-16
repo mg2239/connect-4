@@ -1,7 +1,7 @@
-(* The type for a game state. *)
+(** The type for a game state. *)
 type t
 
-(* The type for the result of a move. *)
+(** The type for the result of a move. *)
 type result = Legal of t | Illegal
 
 (** [init_state] is the initial state of the game. *)
