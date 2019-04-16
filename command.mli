@@ -1,6 +1,6 @@
 (** The type [position] represents a position on the grid with column
     number and the color the player is using. *)
-type position = int * string
+type position = int
 
 
 (** The type [command] represents a player command that is decomposed
@@ -8,6 +8,7 @@ type position = int * string
 type command = 
   | Go of position
   | Help
+  | Quit
 
 
 (** Raised when an empty or malformed command is parsed. *)

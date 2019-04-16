@@ -1,31 +1,22 @@
-<<<<<<< HEAD
-(**
-   Creates the current state of the game along with the current player whose turn
-   it is.
-*)
-
 (** The type for a game state. *)
 type t
 
 (** The type for the result of a move. *)
-=======
-(* The type for a game state. *)
-type t
-
-(* The type for the result of a move. *)
->>>>>>> 30c1056148cc07ca699c89848d39b3ed42c56497
 type result = Legal of t | Illegal
 
 (** [init_state] is the initial state of the game. *)
 val init_state : t
 
-(** [current_player st] is the current player of the game state. *)
+(** [board st] is the board of the game state [st] *)
+val board : t -> Board.t
+
+(** [current_player st] is the current player of the game state [st]. *)
 val current_player : t -> Board.color
 
-(** [next_player st] is the next player of the game state. *)
+(** [next_player st] is the next player of the game state [st]. *)
 val next_player : t -> Board.color
 
-(** [game_state st] is whether a player has won or not. *)
+(** [game_state st] is whether a player has won or not in game state [st]. *)
 val game_state : t -> bool
 
 (** [go b col st] is [r] if attempting to place a disk in column [col] of the 

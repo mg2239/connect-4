@@ -3,6 +3,7 @@ type position = int
 type command = 
   | Go of position
   | Help
+  | Quit
 
 exception Malformed
 
@@ -11,13 +12,17 @@ let parse str =
   let check_empty str = str <> "" in 
   let filtered_lst = List.filter check_empty str_lst in 
   match filtered_lst with
-  | h::[] -> if h = "help" then Help else raise Malformed
+  | h::[] -> begin 
+      if h = "help" then Help 
+      else if h = "quit" then Quit
+      else raise Malformed
+    end
   | h1::h2::[] -> begin
       let column = begin 
         try int_of_string h2 with
         | Failure t -> 7
       end in 
-      if column < 7 then Go (column)
+      if column >= 0 && column < 7 then Go (column)
       else raise Malformed 
     end 
   | _ -> raise Malformed

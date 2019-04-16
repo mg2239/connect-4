@@ -12,7 +12,8 @@ let init_state = {
   current = R
 }
 
-let board st = st.board
+let board st = 
+  st.board
 
 let current_player st =
   st.current
