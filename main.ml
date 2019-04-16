@@ -13,7 +13,7 @@ let rec game state =
       let result =(State.go col state) in
       match result with
       | Legal updated_state -> begin 
-          if State.game_state updated_state then game updated_state
+          if not (State.game_state updated_state) then game updated_state
           else print_string (color ^ " wins!\n"); exit 0
         end
       | Illegal -> begin
