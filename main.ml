@@ -10,7 +10,7 @@ let rec game state =
   print_string (color ^ "'s turn: ");
   match (Command.parse (read_line ())) with
   | Command.Go col -> begin 
-      let result =(State.go (State.board state) col state) in
+      let result =(State.go col state) in
       match result with
       | Legal updated_state -> begin 
           if State.game_state updated_state then game updated_state
