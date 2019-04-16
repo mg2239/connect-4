@@ -1,5 +1,33 @@
 open Command
+open Board
+open State
 open OUnit2
+
+(** [make_test_board_get_as_list name board expected_output] 
+    constructs an OUnit test named [name] that asserts the quality of 
+    [expected_output] with [get_as_list board] *)
+let make_test_board_get_as_list
+    (name: string)
+    (board: Board.t)
+    (expected_output: (color list) list) : test =
+  name >:: (fun _ -> assert_equal 
+               expected_output (get_as_list board))
+
+
+
+let empty_board = Board.empty
+let board1 = Board.make_move empty_board 0 R
+let board2 = Board.make_move board1 0 B
+
+let board_tests = [
+
+]
+
+
+
+
+
+
 
 (** [make_test_command name str expected_output] constructs an OUnit
     test named [name] that asserts the quality of [expected_output]
@@ -42,6 +70,7 @@ let command_tests =
 
 let suite =
   "test suite for A6"  >::: List.flatten [
+    board_tests;
     command_tests;
   ]
 
