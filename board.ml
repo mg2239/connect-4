@@ -30,8 +30,7 @@ let get_as_list board =
     else board.(acc)::(loop (acc+1)) in
   loop 0
 
-let checkwin board =
-
+let check_win board =
   let check_rows grid = 
     let rec loop r =
       if r=4 then None
@@ -39,7 +38,6 @@ let checkwin board =
               && grid.(2).(r)=grid.(3).(r) then Some (grid.(0).(r))
       else loop (r+1) in
     loop 0 in 
-
   let check_cols grid = 
     let rec loop c = 
       if c=4 then None
@@ -47,7 +45,6 @@ let checkwin board =
               && grid.(c).(2)=grid.(c).(3) then Some (grid.(c).(0))
       else loop (c+1) in 
     loop 0 in
-
   let check_diags grid = 
     if grid.(0).(3)=grid.(1).(2) && grid.(1).(2)=grid.(2).(1)
        && grid.(2).(1)=grid.(3).(3) then Some (grid.(0).(3))
@@ -55,7 +52,6 @@ let checkwin board =
             && grid.(2).(2)=grid.(3).(3) then Some (grid.(0).(0))
     else None
   in 
-
   let check_subgrids = 
     (*loop through columns (0-3) *)
     let rec loopcols colmarker = 
