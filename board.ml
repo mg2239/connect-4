@@ -32,8 +32,6 @@ let get_as_list board =
 
 let checkwin board =
 
-
-
   let check_rows grid = 
     let rec loop r =
       if r=4 then None
@@ -92,5 +90,19 @@ let is_full board = filled_slots board = 42
 
 let is_full_column board column = Array.length (board.(column)) = 6
 
-let ascii_art board = failwith "unimplemented"
+let ascii_art board =
+  let rec looprows r = 
+    if r = -1 then "\n"
+    else
+      let rec loopcols c = 
+        if c = 7 then "\n"
+        else 
+          match board.(c).(r) with 
+          |R -> "R  "^(loopcols (c+1))
+          |B -> "B  "^(loopcols (c+1))
+          |Emp -> "O  "^(loopcols (c+1)) in
+      loopcols 0 in
+  looprows 5
+
+
 
