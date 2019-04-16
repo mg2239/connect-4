@@ -20,11 +20,22 @@ let board1 = Board.make_move empty_board 0 R
 let board2 = Board.make_move board1 0 B
 
 let board_tests = [
-
+  make_test_board_get_as_list "bd_test_empty" empty_board 
+    [[Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp];
+     [Emp;Emp;Emp;Emp;Emp;Emp];
+     [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp];
+     [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp]];
+  make_test_board_get_as_list "bd_test_makemove1" board1
+    [[Emp;Emp;Emp;Emp;Emp;R];[Emp;Emp;Emp;Emp;Emp;Emp];
+     [Emp;Emp;Emp;Emp;Emp;Emp];
+     [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp];
+     [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp]];
+  make_test_board_get_as_list "bd_test_makemove2" board2
+    [[Emp;Emp;Emp;Emp;B;R];[Emp;Emp;Emp;Emp;Emp;Emp];
+     [Emp;Emp;Emp;Emp;Emp;Emp];
+     [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp];
+     [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp]];
 ]
-
-
-
 
 
 
