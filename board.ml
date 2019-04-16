@@ -1,9 +1,11 @@
 type color = R | B | Emp
 
-(**AF: the board is represented as an array of length 7, where each element is a
-   color list. The head of each list represents the top disk in that row. If there
-   is no disk in that row, the list is the empty list[]
-   RI: All of the lists representing columns have at most 6 elements
+(**AF: the board is represented as a 2d array of size 7x6 (columns x rows) where
+   each array element represents a position in th board. Each array element is 
+   of type color.
+   RI: In a single column, there cannot be an Emp sandwiched between two colored
+   disks. That is, the subarrays R; Emp; R, R; Emp B, B; Emp; R, B; Emp; B, are
+   all invalid 
 *)
 type t = color array array
 
@@ -27,7 +29,7 @@ let make_move board column color =
 let get_as_list board = 
   let rec loop acc =
     if acc = 7 then []
-    else board.(acc)::(loop (acc+1)) in
+    else Array.to_list(board.(acc))::(loop (acc+1)) in
   loop 0
 
 let check_win board =
