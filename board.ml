@@ -103,7 +103,7 @@ let ascii_art board =
           |R -> "R  "^(loopcols (c+1))
           |B -> "B  "^(loopcols (c+1))
           |Emp -> "O  "^(loopcols (c+1)) in
-      loopcols 0 in
+      (loopcols 0)^(looprows (r-1)) in
   looprows 5
 
 
