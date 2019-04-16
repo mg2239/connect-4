@@ -1,12 +1,15 @@
 let rec game state = 
-  (* print_string (Board.ascii_art (State.board state)); *)
+  print_string (Board.ascii_art (State.board state));
   let color = if State.current_player state = R then "Red" else "Black" in
   print_string (color ^ "'s turn: ");
   match (Command.parse (read_line ())) with
   | Command.Go col -> begin 
       let result =(State.go (State.board state) col state) in
       match result with
-      | Legal updated_state -> game updated_state (* need to process game win/lost state**)
+      | Legal updated_state -> begin 
+          if State.game_state updated_state then game updated_state
+          else print_string (color ^ " wins!"); exit 0
+        end
       | Illegal -> print_string "Your move was invalid, please try again.";
         game state;
     end
