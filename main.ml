@@ -5,16 +5,17 @@
     @param state is of type State.t and represents the current game state.
 *)
 let rec game state = 
+  let color = Board.color_string (State.current_player state) in
   print_string ("\n" ^ (Board.ascii_art (State.board state)));
-  let color = if State.current_player state = R then "Red" else "Black" in
   print_string (color ^ "'s turn: ");
   match (Command.parse (read_line ())) with
   | Command.Go col -> begin 
       let result =(State.go col state) in
       match result with
       | Legal updated_state -> begin 
-          if not (State.game_state updated_state) then game updated_state
-          else print_string (color ^ " wins!\n"); exit 0
+          match Board.check_win (State.board updated_state) with 
+          | None -> game updated_state
+          | Some c -> print_string ((Board.color_string c) ^ " wins!\n"); exit 0
         end
       | Illegal -> begin
           print_string "Your move was invalid, please try again.\n";

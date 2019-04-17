@@ -54,4 +54,5 @@ val is_full_column : t -> int -> bool
 *)
 val ascii_art : t -> string
 
-
+(** [color_string color] is the color in string format. *)
+val color_string : color -> string

@@ -1,6 +1,8 @@
+open Board
+
 type t = {
   board: Board.t;
-  current: Board.color
+  current: color
 }
 
 type result = Legal of t | Illegal
@@ -17,7 +19,7 @@ let current_player st =
   st.current
 
 let next_player st = 
-  if st.current = Board.R then Board.B else Board.R
+  if st.current = R then B else R
 
 let game_state st = 
   match Board.check_win st.board with
@@ -26,8 +28,8 @@ let game_state st =
 
 let go col st = 
   let b = st.board in
-  if not (Board.is_full_column b col) then Legal ({
-      board = (Board.make_move b col st.current);
+  if not (is_full_column b col) then Legal ({
+      board = (make_move b col st.current);
       current = next_player st
     })
   else Illegal

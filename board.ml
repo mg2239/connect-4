@@ -17,6 +17,7 @@ let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|] |]
 
+
 let make_move board column color = 
   let find_top col = 
     let rec loop count =
@@ -36,22 +37,42 @@ let check_win board =
   let check_rows grid = 
     let rec loop r =
       if r=4 then None
-      else if grid.(0).(r)=grid.(1).(r) && grid.(1).(r)=grid.(2).(r)
-              && grid.(2).(r)=grid.(3).(r) then Some (grid.(0).(r))
+      else if grid.(0).(r)=grid.(1).(r) && 
+              grid.(1).(r)=grid.(2).(r) && 
+              grid.(2).(r)=grid.(3).(r) && 
+              grid.(0).(r) <> Emp && 
+              grid.(1).(r) <> Emp &&
+              grid.(2).(r) <> Emp &&
+              grid.(3).(r) <> Emp then Some (grid.(0).(r))
       else loop (r+1) in
     loop 0 in 
   let check_cols grid = 
     let rec loop c = 
       if c=4 then None
-      else if grid.(c).(0)=grid.(c).(1) && grid.(c).(1)=grid.(c).(2) 
-              && grid.(c).(2)=grid.(c).(3) then Some (grid.(c).(0))
+      else if grid.(c).(0)=grid.(c).(1) && 
+              grid.(c).(1)=grid.(c).(2) && 
+              grid.(c).(2)=grid.(c).(3) && 
+              grid.(c).(0) <> Emp && 
+              grid.(c).(1) <> Emp &&
+              grid.(c).(2) <> Emp &&
+              grid.(c).(3) <> Emp then Some (grid.(c).(0))
       else loop (c+1) in 
     loop 0 in
   let check_diags grid = 
-    if grid.(0).(3)=grid.(1).(2) && grid.(1).(2)=grid.(2).(1)
-       && grid.(2).(1)=grid.(3).(3) then Some (grid.(0).(3))
-    else if grid.(0).(0)=grid.(1).(1) && grid.(1).(1)=grid.(2).(2) 
-            && grid.(2).(2)=grid.(3).(3) then Some (grid.(0).(0))
+    if grid.(0).(3)=grid.(1).(2) && 
+       grid.(1).(2)=grid.(2).(1) && 
+       grid.(2).(1)=grid.(3).(3) &&
+       grid.(0).(3) <> Emp && 
+       grid.(1).(2) <> Emp &&
+       grid.(2).(1) <> Emp &&
+       grid.(3).(3) <> Emp then Some (grid.(0).(3))
+    else if grid.(0).(0)=grid.(1).(1) && 
+            grid.(1).(1)=grid.(2).(2) && 
+            grid.(2).(2)=grid.(3).(3) &&
+            grid.(0).(0) <> Emp && 
+            grid.(1).(1) <> Emp &&
+            grid.(2).(2) <> Emp &&
+            grid.(3).(3) <> Emp then Some (grid.(0).(0))
     else None
   in 
   let check_subgrids = 
@@ -64,19 +85,18 @@ let check_win board =
           else
             let subgrid = Array.sub (Array.sub board rowmarker 4) colmarker 4 in
             match check_diags subgrid with
-            |None -> 
+            | None -> 
               (match check_cols subgrid with
-               |None -> (match check_rows subgrid with
-                   |None -> looprows (rowmarker + 1)
-                   |x -> x)
-               |y -> y)
-            |z -> z in
+               | None -> (match check_rows subgrid with
+                   | None -> looprows (rowmarker + 1)
+                   | x -> x)
+               | y -> y)
+            | z -> z in
         match looprows 0 with 
-        |None -> loopcols (colmarker + 1)
-        |x -> x in
+        | None -> loopcols (colmarker + 1)
+        | x -> x in
     loopcols 0 
-  in
-  check_subgrids
+  in check_subgrids
 
 let filled_slots_helper column  = 
   let rec loop counter =
@@ -100,11 +120,14 @@ let ascii_art board =
         if c = 7 then "\n"
         else 
           match board.(c).(r) with 
-          |R -> "R  "^(loopcols (c+1))
-          |B -> "B  "^(loopcols (c+1))
-          |Emp -> "O  "^(loopcols (c+1)) in
+          | R -> "R  "^(loopcols (c+1))
+          | B -> "B  "^(loopcols (c+1))
+          | Emp -> "O  "^(loopcols (c+1)) in
       (loopcols 0)^(looprows (r-1)) in
   looprows 5
 
-
-
+let color_string color =
+  match color with
+  | R -> "Red"
+  | B -> "Black"
+  | Emp -> "Empty"
