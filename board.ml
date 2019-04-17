@@ -56,7 +56,7 @@ let check_win (board:color array array) =
   let check_diags grid = 
     if (grid.(0).(3) = grid.(1).(2)) && 
        (grid.(1).(2) = grid.(2).(1)) && 
-       (grid.(2).(1) = grid.(3).(3)) && 
+       (grid.(2).(1) = grid.(3).(0)) && 
        grid.(0).(3) <> Emp
     then Some (grid.(0).(3))
     else if grid.(0).(0) = grid.(1).(1) && 
