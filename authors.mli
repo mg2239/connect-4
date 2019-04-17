@@ -1,6 +1,7 @@
 (**
    Metadata about this submission.
-   @author TODO
+   @author Imaan Rahim (ii53), Matthew Guo (mg2239), Rohan Upadhyayula (ru38),
+           Yiren Wang (yw679)
 *)
 
 (** [hours_worked] is a list of the number of hours each team member
