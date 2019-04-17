@@ -41,7 +41,7 @@ let board_tests = [
      [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp];
      [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp]];
   make_test_board_get_as_list "bd_test_makemove2" board2
-    [[B;R;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp];
+    [[R;B;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp];
      [Emp;Emp;Emp;Emp;Emp;Emp];
      [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp];
      [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp]];

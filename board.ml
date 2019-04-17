@@ -17,14 +17,38 @@ let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|] |]
 
+let ascii_art board =
+  let rec looprows r = 
+    if r = -1 then "\n"
+    else
+      let rec loopcols c = 
+        if c = 7 then "\n"
+        else 
+          match board.(c).(r) with 
+          | R -> "\027[31mO\027[0m  " ^ (loopcols (c + 1))
+          | B -> "\027[34mO\027[0m  " ^ (loopcols (c + 1))
+          | Emp -> "O  " ^ (loopcols (c + 1)) in
+      (loopcols 0) ^ (looprows (r - 1)) in
+  looprows 5
+
+let board_copy board =
+  let new_board = Array.make 7 (Array.make 6 Emp) in 
+  (for x=0 to 6 do
+     new_board.(x) <- (Array.copy (board.(x))) done); new_board
+
 let make_move board column color = 
+  let new_board = board_copy board in
+
   let find_top col = 
+
     let rec loop count =
       if col.(count) = Emp then count 
       else if count = 7 then failwith "Invalid Move"
       else loop (count+1) in
+
     loop 0 in
-  (board.(column).(find_top board.(column))<-color); board
+
+  (new_board.(column).(find_top (new_board.(column)))<-color);  new_board
 
 let get_as_list (board: color array array) = 
   let rec loop acc =
