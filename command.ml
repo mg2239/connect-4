@@ -20,9 +20,9 @@ let parse str =
   | h1::h2::[] -> begin
       let column = begin 
         try int_of_string h2 with
-        | Failure t -> 7
+        | Failure t -> 8
       end in 
-      if column >= 0 && column < 7 then Go (column)
+      if column > 0 && column < 8 then Go (column - 1)
       else raise Malformed 
     end 
   | _ -> raise Malformed

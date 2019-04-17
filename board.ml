@@ -35,36 +35,41 @@ let get_as_list (board: color array array) =
 let check_win (board:color array array) =
   let check_rows grid = 
     let rec loop r =
-      if r=4 then None
-      else if grid.(0).(r)=grid.(1).(r) && grid.(1).(r)=grid.(2).(r)
-              && grid.(2).(r)=grid.(3).(r) && grid.(0).(r) <> Emp 
+      if r = 4 then None
+      else if grid.(0).(r) = grid.(1).(r) && 
+              grid.(1).(r) = grid.(2).(r) && 
+              grid.(2).(r) = grid.(3).(r) && 
+              grid.(0).(r) <> Emp 
       then Some (grid.(0).(r))
-      else loop (r+1) in
+      else loop (r + 1) in
     loop 0 in 
-
   let check_cols grid = 
     let rec loop c = 
       if c=4 then None
-      else if (grid.(c).(0)=grid.(c).(1)) && (grid.(c).(1)=grid.(c).(2)) 
-              && (grid.(c).(2)=grid.(c).(3)) && grid.(c).(0)<>Emp
+      else if (grid.(c).(0) = grid.(c).(1)) && 
+              (grid.(c).(1) = grid.(c).(2)) && 
+              (grid.(c).(2) = grid.(c).(3)) && 
+              grid.(c).(0) <> Emp
       then Some (grid.(c).(0))
-      else loop (c+1) in 
+      else loop (c + 1) in 
     loop 0 in
   let check_diags grid = 
-    if (grid.(0).(3)=grid.(1).(2)) && (grid.(1).(2)=grid.(2).(1))
-       && (grid.(2).(1)=grid.(3).(3)) && grid.(0).(3)<>Emp
+    if (grid.(0).(3) = grid.(1).(2)) && 
+       (grid.(1).(2) = grid.(2).(1)) && 
+       (grid.(2).(1) = grid.(3).(3)) && 
+       grid.(0).(3) <> Emp
     then Some (grid.(0).(3))
-    else if grid.(0).(0)=grid.(1).(1) && grid.(1).(1)=grid.(2).(2) 
-            && grid.(2).(2)=grid.(3).(3) && grid.(0).(0)<>Emp
+    else if grid.(0).(0) = grid.(1).(1) && 
+            grid.(1).(1) = grid.(2).(2) && 
+            grid.(2).(2) = grid.(3).(3) && 
+            grid.(0).(0) <> Emp
     then Some (grid.(0).(0))
     else None
   in 
-
   let sub_array_2d (arr: t) x_start x_len y_start y_len = 
     let x_sub = Array.sub arr x_start x_len in
-    ((for x=0 to x_len-1
+    ((for x = 0 to x_len - 1
       do x_sub.(x) <- Array.sub x_sub.(x) y_start y_len done); x_sub) in
-
   let check_subgrids = 
     (*loop through columns (0-3) *)
     let rec loopcols colmarker = 
@@ -75,16 +80,16 @@ let check_win (board:color array array) =
           else
             let subgrid = sub_array_2d board rowmarker 4 colmarker 4 in
             match check_diags subgrid with
-            |None -> 
+            | None -> 
               (match check_cols subgrid with
-               |None -> (match check_rows subgrid with
-                   |None -> looprows (rowmarker + 1)
-                   |x -> x)
-               |y -> y)
-            |z -> z in
+               | None -> (match check_rows subgrid with
+                   | None -> looprows (rowmarker + 1)
+                   | x -> x)
+               | y -> y)
+            | z -> z in
         match looprows 0 with 
-        |None -> loopcols (colmarker + 1)
-        |x -> x in
+        | None -> loopcols (colmarker + 1)
+        | x -> x in
     loopcols 0 
   in
   check_subgrids
@@ -93,7 +98,7 @@ let filled_slots_helper column  =
   let rec loop counter =
     if counter = 6 then 0
     else if column.(counter) <> Emp then 1 + loop (counter+1)
-    else loop (counter+1) in 
+    else loop (counter + 1) in 
   loop 0
 
 let filled_slots board = 
@@ -111,16 +116,16 @@ let ascii_art board =
         if c = 7 then "\n"
         else 
           match board.(c).(r) with 
-          |R -> "R  "^(loopcols (c+1))
-          |B -> "B  "^(loopcols (c+1))
-          |Emp -> "O  "^(loopcols (c+1)) in
-      (loopcols 0)^(looprows (r-1)) in
+          | R -> "\027[31mO\027[0m  " ^ (loopcols (c + 1))
+          | B -> "\027[34mO\027[0m  " ^ (loopcols (c + 1))
+          | Emp -> "O  " ^ (loopcols (c + 1)) in
+      (loopcols 0) ^ (looprows (r - 1)) in
   looprows 5
 
 let color_string color =
   match color with
   | R -> "Red"
-  | B -> "Black"
-  | Emp -> "Empty"
+  | B -> "Blue"
+  | Emp -> "Emp"
 
 
