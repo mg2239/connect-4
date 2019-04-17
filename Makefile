@@ -26,7 +26,7 @@ finalcheck: check
 	bash finalcheck.sh
 
 zip:
-	zip adv.zip *.ml* *.json _tags Makefile
+	zip connect4.zip *.ml* _tags Makefile
 
 docs: docs-public docs-private
 

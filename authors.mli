@@ -1,6 +1,6 @@
 (**
    Metadata about this submission.
-   @author Imaan Rahim (ii53), Matthew Guo (mg2239), Rohan Upadhyayula (ru38),
+   @author Imaan S. I. Rahim (ii53), Matthew Guo (mg2239), Rohan Upadhyayula (ru38),
            Yiren Wang (yw679)
 *)
 
