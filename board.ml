@@ -97,10 +97,10 @@ let check_win (board:color array array) =
   let check_subgrids = 
     (*loop through columns (0-3) *)
     let rec loopcols colmarker = 
-      if colmarker = 2 then None
+      if colmarker = 3 then None
       else
         let rec looprows rowmarker = 
-          if rowmarker = 3 then None
+          if rowmarker = 4 then None
           else
             let subgrid = sub_array_2d board rowmarker 4 colmarker 4 in
             match check_diags subgrid with
