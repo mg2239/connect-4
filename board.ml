@@ -38,16 +38,12 @@ let board_copy board =
 
 let make_move board column color = 
   let new_board = board_copy board in
-
   let find_top col = 
-
     let rec loop count =
       if col.(count) = Emp then count 
       else if count = 7 then failwith "Invalid Move"
       else loop (count+1) in
-
     loop 0 in
-
   (new_board.(column).(find_top (new_board.(column)))<-color);  new_board
 
 let get_as_list (board: color array array) = 

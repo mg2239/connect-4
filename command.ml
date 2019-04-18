@@ -22,7 +22,7 @@ let parse str =
         try int_of_string h2 with
         | Failure t -> 8
       end in 
-      if column > 0 && column < 8 then Go (column - 1)
+      if column > 0 && column < 8 && h1 = "go" then Go (column - 1)
       else raise Malformed 
     end 
   | _ -> raise Malformed

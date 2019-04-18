@@ -30,6 +30,7 @@ let rec game state =
                         "\nTo place a game piece, type: \"go (1-7)\" where the " ^
                         "number you input represents the respective column in " ^
                         "the game board." ^
+                        "\nType \"quit\" to quit the game." ^
                         "\nIf you need to see this message again, type " ^ 
                         "\"help\" into the console.\n\n");
           game state;
@@ -50,12 +51,13 @@ let rec game state =
 let main () = 
   print_string ("\nWelcome to the 3110 Connect Four Game!"^
                 "\nIn Connect Four, the object of the game is to get four "^ 
-                "of your game pieces in a row either vertically, horizontally,"^ 
+                "of your game pieces in a row either vertically, horizontally, "^ 
                 "or diagonally." ^
                 "\nYou can also place pieces in a fashion to block your "^ 
                 "opponent from getting four in a row." ^
                 "\nTo place a game piece, type: \"go (1-7)\" where the number "^ 
                 "you input represents the respective column in the game board."^
+                "\nType \"quit\" to quit the game." ^
                 "\nIf you need to see this message again, type "^ 
                 "\"help\" into the console.\n\n");
   game (State.init_state)
