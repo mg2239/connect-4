@@ -93,3 +93,5 @@ val is_full_column : t -> int -> bool
     @param color The color of a disk.
     @return The color as a string. *)
 val color_string : color -> string
+
+val score : t -> int

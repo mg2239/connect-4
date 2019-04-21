@@ -1,11 +1,11 @@
 type color = R | B | Emp
 
-(**AF: the board is represented as a 2d array of size 7x6 (columns x rows) where
-   each array element represents a position in th board. Each array element is 
-   of type color.
-   RI: In a single column, there cannot be an Emp sandwiched between two colored
-   disks. That is, the subarrays R; Emp; R, R; Emp B, B; Emp; R, B; Emp; B, are
-   all invalid 
+(** AF: the board is represented as a 2d array of size 7x6 (columns x rows) where
+    each array element represents a position in th board. Each array element is 
+    of type color.
+    RI: In a single column, there cannot be an Emp sandwiched between two colored
+    disks. That is, the subarrays R; Emp; R, R; Emp B, B; Emp; R, B; Emp; B, are
+    all invalid 
 *)
 type t = color array array
 
@@ -51,6 +51,73 @@ let get_as_list (board: color array array) =
     if acc = 7 then []
     else Array.to_list(board.(acc))::(loop (acc+1)) in
   loop 0
+
+let score board =
+  let check_rows grid = 
+    let rec loop r acc =
+      if r = 3 then acc
+      else if grid.(0).(r) = grid.(1).(r) && 
+              grid.(1).(r) = grid.(2).(r) && 
+              grid.(0).(r) <> Emp
+      then begin
+        match grid.(0).(r) with
+        | R -> loop (r + 1) (acc - 1)
+        | B -> loop (r + 1) (acc + 1)
+        | _ -> failwith "invalid"
+      end 
+      else loop (r + 1) acc in 
+    loop 0 0 in
+  let check_cols grid = 
+    let rec loop c acc = 
+      if c = 3 then acc
+      else if (grid.(c).(0) = grid.(c).(1)) && 
+              (grid.(c).(1) = grid.(c).(2)) && 
+              grid.(c).(0) <> Emp
+      then begin
+        match grid.(c).(0) with
+        | R -> loop (c + 1) (acc - 1)
+        | B -> loop (c + 1) (acc + 1)
+        | _ -> failwith "invalid"
+      end 
+      else loop (c + 1) acc in 
+    loop 0 0 in
+  let check_diags grid = 
+    if (grid.(0).(2) = grid.(1).(1)) && 
+       (grid.(1).(1) = grid.(2).(0)) && 
+       grid.(0).(2) <> Emp
+    then begin
+      match grid.(0).(2) with
+      | R -> -1
+      | B -> 1
+      | _ -> failwith "invalid"
+    end 
+    else if grid.(0).(0) = grid.(1).(1) && 
+            grid.(1).(1) = grid.(2).(2) && 
+            grid.(0).(0) <> Emp
+    then begin
+      match grid.(0).(0) with
+      | R -> -1
+      | B -> 1
+      | _ -> failwith "invalid"
+    end 
+    else 0 in
+  let sub_array_2d arr x_start x_len y_start y_len = 
+    let x_sub = Array.sub arr x_start x_len in
+    ((for x = 0 to x_len - 1
+      do x_sub.(x) <- Array.sub x_sub.(x) y_start y_len done); x_sub) in
+  let check_subgrids = 
+    let rec loopcols colmarker acc = 
+      if colmarker = 4 then acc
+      else
+        let rec looprows rowmarker acc = 
+          if rowmarker = 5 then acc
+          else
+            let subgrid = sub_array_2d board rowmarker 3 colmarker 3 in
+            looprows (rowmarker + 1) (acc + check_cols subgrid + check_diags subgrid + check_rows subgrid) in
+        loopcols (colmarker + 1) (looprows 0 acc) in
+    loopcols 0 0
+  in
+  check_subgrids
 
 let check_win (board:color array array) =
   let check_rows grid = 
