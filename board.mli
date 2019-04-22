@@ -94,4 +94,5 @@ val is_full_column : t -> int -> bool
     @return The color as a string. *)
 val color_string : color -> string
 
+(** *)
 val score : t -> int
