@@ -52,7 +52,7 @@ let get_as_list (board: color array array) =
     else Array.to_list(board.(acc))::(loop (acc+1)) in
   loop 0
 
-let score board =
+let check_3x3 grid = 
   let check_rows grid = 
     let rec loop r acc =
       if r = 3 then acc
@@ -101,20 +101,42 @@ let score board =
       | _ -> failwith "invalid"
     end 
     else 0 in
+  check_rows grid + check_cols grid + check_diags grid
+
+let check_1x3 grid = 
+  if (grid.(0).(0) = grid.(0).(1)) && 
+     (grid.(0).(1) = grid.(0).(2)) && 
+     grid.(0).(0) <> Emp
+  then begin
+    match grid.(0).(0) with
+    | R -> -1
+    | B -> 1
+    | _ -> failwith "invalid"
+  end 
+  else 0
+
+let score board =
   let sub_array_2d arr x_start x_len y_start y_len = 
     let x_sub = Array.sub arr x_start x_len in
     ((for x = 0 to x_len - 1
       do x_sub.(x) <- Array.sub x_sub.(x) y_start y_len done); x_sub) in
   let check_subgrids = 
     let rec loopcols colmarker acc = 
-      if colmarker = 4 then acc
+      if colmarker > 5 then acc
       else
         let rec looprows rowmarker acc = 
-          if rowmarker = 5 then acc
-          else
-            let subgrid = sub_array_2d board rowmarker 3 colmarker 3 in
-            looprows (rowmarker + 1) (acc + check_cols subgrid + check_diags subgrid + check_rows subgrid) in
-        loopcols (colmarker + 1) (looprows 0 acc) in
+          if rowmarker = 7 then acc
+          else begin
+            if (rowmarker <> 6) then begin
+              let subgrid = sub_array_2d board rowmarker 3 colmarker 3 in
+              looprows (rowmarker + 3) (acc + check_3x3 subgrid)
+            end
+            else begin 
+              let subgrid = sub_array_2d board rowmarker 1 colmarker 3 in
+              looprows (rowmarker + 1) (acc + check_1x3 subgrid)
+            end
+          end in
+        loopcols (colmarker + 3) (looprows 0 acc) in
     loopcols 0 0
   in
   check_subgrids
