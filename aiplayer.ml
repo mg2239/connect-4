@@ -21,7 +21,9 @@ let generate_minmax_tree st =
 
 (** Takes fully evaluated tree with scores at Leafs (But not at nodes), 
     returns the next move for the ai to make *)
-let eval_tree t = failwith ""
+let eval_tree t : int = failwith ""
 
 (** returns a state after the AI makes a move *)
-let make_move_ai st = failwith ""
+let make_move_ai (st:State.t) : State.t = {
+  board = Board.make_move st.board (eval_tree st) (st.current);
+  current = st.current}
