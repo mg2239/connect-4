@@ -3,7 +3,10 @@
 *)
 
 (** The type for a game state. *)
-type t
+type t = {
+  board: Board.t;
+  current: Board.color
+}
 
 (** The type for the result of a move. *)
 type result = Legal of t | Illegal
