@@ -64,11 +64,12 @@ let eval_tree t =
       root_children in
 
   let extract_best_scoring_move scored_root_children =
-    List.fold_left 
-      (fun (best_sc, best_move) (Node (sc, st, move, c))->
-         (if sc>best_sc then (sc, move)
-          else (best_sc, best_move))
-      ) (-100, -1) scored_root_children in
+    match (List.fold_left 
+             (fun (best_sc, best_move) (Node (sc, st, move, c))->
+                (if sc>best_sc then (sc, move)
+                 else (best_sc, best_move))
+             ) (-100, -1) scored_root_children) with
+    |(sc, m)-> m in
 
   let Node (sc, state, move, children) = t in
 
@@ -76,6 +77,5 @@ let eval_tree t =
 
 
 (** returns a state after the AI makes a move *)
-let make_move_ai (st:State.t) : State.t = {
-  board = Board.make_move st.board (eval_tree st) (st.current);
-  current = st.current}
+let make_move_ai (st:State.t) : State.result = 
+  State.go (eval_tree (generate_minmax_tree st)) st
