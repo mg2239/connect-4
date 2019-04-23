@@ -17,12 +17,12 @@ val empty : t
 (** [ascii_art board] is a string containing an ASCII art representation
     of [board] that can be printed to the terminal during gameplay
     Example: [ascii_art Board.empty] is
-             ["O  O  O  O  O  O  \n
-               O  O  O  O  O  O  \n
-               O  O  O  O  O  O  \n
-               O  O  O  O  O  O  \n
-               O  O  O  O  O  O  \n
-               O  O  O  O  O  O  \n"]
+             ["O  O  O  O  O  O  O  \n
+               O  O  O  O  O  O  O  \n
+               O  O  O  O  O  O  O  \n
+               O  O  O  O  O  O  O  \n
+               O  O  O  O  O  O  O  \n
+               O  O  O  O  O  O  O  \n"]
     Raises: None.
     @param board The game board.
     @return [board] as ASCII art. *)
