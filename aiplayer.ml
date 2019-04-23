@@ -23,20 +23,23 @@ let generate_minmax_tree st =
       if count = 7 then []
       else 
         match go count curr_state with
-        |Legal res -> Node (0, res, count, gen_children res (d+1))::(loop_norm (count+1))
+        |Legal res -> 
+          Node (0, res, count, gen_children res (d+1))::(loop_norm (count+1))
         |Illegal -> (loop_norm (count + 1)) in 
     let rec loop_leaf count = 
       if count = 7 then []
       else 
         match go count curr_state with
         |Legal res -> 
-          Node (Board.score (board res), res, count, gen_children res (d+1))::(loop_norm (count+1))
+          Node (Board.score (board res), res, 
+                count, gen_children res (d+1))::(loop_norm (count+1))
         |Illegal -> (loop_norm (count + 1)) in 
     if d = depth then loop_leaf 0(*create the leaf layer *)
     else loop_norm 0 in
   (*loop over 7 Nodes *)
   (*call gen_Children on the root *)
   Node (0, st, -1, gen_children st 0)
+
 (** Takes fully evaluated tree with scores at Leafs (But not at nodes), 
     returns the next move for the ai to make *)
 let eval_tree t : int = failwith ""
