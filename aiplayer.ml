@@ -19,26 +19,35 @@ type minmaxtree = Node of int*State.t*int*(minmaxtree list)
 let generate_minmax_tree st = 
   (*gen_children *)
   let rec gen_children curr_state d =
+
     let rec loop_norm count = 
       if count = 7 then []
       else 
         match go count curr_state with
         |Legal res -> 
-          if check_win (board res)=None then
+          let check_win_res = check_win (board res) in
+          if check_win_res=None then
             Node (-100, res, count, gen_children res (d+1))
             ::(loop_norm (count+1))
-          else Node (100, res, count, [])::(loop_norm (count+1))
+          else if check_win_res=(Some (B))
+          then Node (100, res, count, [])::(loop_norm (count+1))
+          else Node (-100, res, count, [])::(loop_norm (count+1))
         |Illegal -> (loop_norm (count + 1)) in 
+
     let rec loop_leaf count = 
       if count = 7 then []
       else 
         match go count curr_state with
         |Legal res -> 
-          if check_win (board res)=None then
-            Node (Board.score (board res), res, count, gen_children res (d+1))
-            ::(loop_norm (count+1))
-          else Node (100, res, count, [])::(loop_norm (count+1))
-        |Illegal -> (loop_norm (count + 1)) in 
+          let check_win_res = check_win (board res) in
+          if check_win_res=None then
+            Node (Board.score (board res), res, count, [])
+            ::(loop_leaf (count+1))
+          else if check_win_res=(Some (B)) 
+          then Node (100, res, count, [])::(loop_leaf (count+1))
+          else Node (-100, res, count, [])::(loop_leaf (count+1))
+        |Illegal -> (loop_leaf (count + 1)) in 
+
     if d = depth then loop_leaf 0(*create the leaf layer *)
     else loop_norm 0 in
   (*loop over 7 Nodes *)
@@ -78,4 +87,4 @@ let eval_tree t =
 
 (** returns a state after the AI makes a move *)
 let make_move_ai (st:State.t) : State.result = 
-  State.go (eval_tree (generate_minmax_tree st)) st
+  State.go (eval_tree ((print_string "works up to here");generate_minmax_tree st)) st
