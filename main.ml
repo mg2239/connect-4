@@ -55,7 +55,7 @@ let rec game_1 state =
           match result with
           | Legal updated_state -> game_1 updated_state
           | Illegal -> 
-            print_string "Oops AI move was invalid. \n";
+            print_string "Oops AI move was invalid...\n";
             game_1 state;
         end
       | _ -> print_string "Your input was invalid, please try again.\n";
