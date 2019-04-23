@@ -115,32 +115,6 @@ let check_1x3 grid =
   end 
   else 0
 
-let score board =
-  let sub_array_2d arr x_start x_len y_start y_len = 
-    let x_sub = Array.sub arr x_start x_len in
-    ((for x = 0 to x_len - 1
-      do x_sub.(x) <- Array.sub x_sub.(x) y_start y_len done); x_sub) in
-  let check_subgrids = 
-    let rec loopcols colmarker acc = 
-      if colmarker > 5 then acc
-      else
-        let rec looprows rowmarker acc = 
-          if rowmarker = 7 then acc
-          else begin
-            if (rowmarker <> 6) then begin
-              let subgrid = sub_array_2d board rowmarker 3 colmarker 3 in
-              looprows (rowmarker + 3) (acc + check_3x3 subgrid)
-            end
-            else begin 
-              let subgrid = sub_array_2d board rowmarker 1 colmarker 3 in
-              looprows (rowmarker + 1) (acc + check_1x3 subgrid)
-            end
-          end in
-        loopcols (colmarker + 3) (looprows 0 acc) in
-    loopcols 0 0
-  in
-  check_subgrids
-
 let check_win (board:color array array) =
   let check_rows grid = 
     let rec loop r =
@@ -202,6 +176,35 @@ let check_win (board:color array array) =
     loopcols 0 
   in
   check_subgrids
+
+let score board =
+  let sub_array_2d arr x_start x_len y_start y_len = 
+    let x_sub = Array.sub arr x_start x_len in
+    ((for x = 0 to x_len - 1
+      do x_sub.(x) <- Array.sub x_sub.(x) y_start y_len done); x_sub) in
+  let check_subgrids = 
+    let rec loopcols colmarker acc = 
+      if colmarker > 5 then acc
+      else
+        let rec looprows rowmarker acc = 
+          if rowmarker = 7 then acc
+          else begin
+            if (rowmarker <> 6) then begin
+              let subgrid = sub_array_2d board rowmarker 3 colmarker 3 in
+              looprows (rowmarker + 3) (acc + check_3x3 subgrid)
+            end
+            else begin 
+              let subgrid = sub_array_2d board rowmarker 1 colmarker 3 in
+              looprows (rowmarker + 1) (acc + check_1x3 subgrid)
+            end
+          end in
+        loopcols (colmarker + 3) (looprows 0 acc) in
+    loopcols 0 0 in
+  let win_score board = 
+    match check_win board with 
+    | Some c -> if c = R then -50 else 50
+    | None -> 0 in
+  check_subgrids + win_score board
 
 let filled_slots_helper column  = 
   let rec loop counter =
