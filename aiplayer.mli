@@ -2,6 +2,14 @@
    Creates a AI that plays the game.
 *)
 
+(** The minmax tree of possible moves is represented as a 7-ary tree where
+    the root node is the current state and the children of a node are the states
+    resulting from possible moves. A leaf in the tree is represented by a node
+    whose list of child nodes is empty. Scores are initially only evaluated at
+    a leaf. Score values at all other nodes are set to 0.
+    A Node has attributes score:int, state: State.t, next_move:int, 
+    children:minmaxtree list (of maximum size 7)
+*)
 type minmaxtree = Node of int * State.t * int * minmaxtree list
 
 (** [generate_minmax_tree st] is a minmax tree based on the current state [st].

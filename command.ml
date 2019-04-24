@@ -1,10 +1,15 @@
+(** The type [position] represents a position on the grid with column
+    number and the color the player is using. *)
 type position = int
 
+(** The type [command] represents a player command that is decomposed
+    into a verb, and possibly a position. *)
 type command = 
   | Go of position
   | Help
   | Quit
 
+(** Raised when an empty or malformed command is parsed. *)
 exception Malformed
 
 let parse str = 

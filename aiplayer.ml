@@ -13,6 +13,9 @@ let depth = 3
 *)
 type minmaxtree = Node of int * State.t * int * minmaxtree list
 
+(** [generate_minmax_tree st] is a minmax tree based on the current state [st].
+    Takes into account whether a column is full, and stops tree if column is 
+    full. *)
 let generate_minmax_tree st = 
   (*gen_children *)
   let rec gen_children curr_state d =
@@ -42,6 +45,8 @@ let generate_minmax_tree st =
   (* call gen_Children on the root *)
   Node (-100, st, -1, gen_children st 0)
 
+(** [eval_tree t] is the column number that the AI should play in, determined by
+    evaluating a minmax tree [t]. *)
 let eval_tree t = 
   let rec get_score children curr_score =
     match children with 
@@ -64,5 +69,7 @@ let eval_tree t =
   let Node (sc, state, move, children) = t in
   extract_best_scoring_move (scored_children (children))
 
+(** [make_move_ai st] is a result [Legal st'] where [st'] is the state with 
+    the new move determined by [eval_tree t]. *)
 let make_move_ai (st:State.t) : State.result = 
   State.go (eval_tree (generate_minmax_tree st)) st
