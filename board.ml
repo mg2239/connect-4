@@ -142,13 +142,13 @@ let check_win (board:color array array) =
     let x_sub = Array.sub arr x_start x_len in
     ((for x = 0 to x_len - 1
       do x_sub.(x) <- Array.sub x_sub.(x) y_start y_len done); x_sub) in
-  let rec loop colmarker rowmarker = 
-    if colmarker = 3 then None
-    else if rowmarker = 4 then loop (colmarker + 1) 0
+  let rec loop col row = 
+    if col = 3 then None
+    else if row = 4 then loop (col + 1) 0
     else begin
-      let subgrid = sub_array_2d board rowmarker 4 colmarker 4 in
+      let subgrid = sub_array_2d board row 4 col 4 in
       match (check_diags subgrid, check_cols subgrid, check_rows subgrid) with
-      | (None, None, None) -> loop colmarker (rowmarker + 1)
+      | (None, None, None) -> loop col (row + 1)
       | (None, None, c) | (None, c, _) | (c, _, _) -> c
     end in
   loop 0 0
@@ -158,17 +158,17 @@ let score board =
     let x_sub = Array.sub arr x_start x_len in
     ((for x = 0 to x_len - 1
       do x_sub.(x) <- Array.sub x_sub.(x) y_start y_len done); x_sub) in
-  let rec loop colmarker rowmarker acc = 
-    if colmarker > 4 then acc
-    else if rowmarker > 6 then loop (colmarker + 2) 0 acc
+  let rec loop col row acc = 
+    if col > 4 then acc
+    else if row > 6 then loop (col + 2) 0 acc
     else begin
-      if (rowmarker <> 6) then begin
-        let subgrid = sub_array_2d board rowmarker 2 colmarker 2 in
-        loop colmarker (rowmarker + 2) (acc + score_2x2 subgrid)
+      if row <> 6 then begin
+        let subgrid = sub_array_2d board row 2 col 2 in
+        loop col (row + 2) (acc + score_2x2 subgrid)
       end
       else begin 
-        let subgrid = sub_array_2d board rowmarker 1 colmarker 2 in
-        loop colmarker (rowmarker + 1) (acc + score_1x2 subgrid)
+        let subgrid = sub_array_2d board row 1 col 2 in
+        loop col (row + 1) (acc + score_1x2 subgrid)
       end
     end in 
   let win_score board = 
