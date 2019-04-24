@@ -20,14 +20,13 @@ let parse str =
   | h::[] -> begin 
       if h = "help" then Help 
       else if h = "quit" then Quit
-      else raise Malformed
+      else begin
+        let column = begin 
+          try int_of_string h with
+          | Failure t -> 8
+        end in 
+        if column >= 1 && column <= 7 then Go (column - 1)
+        else raise Malformed 
+      end 
     end
-  | h1::h2::[] -> begin
-      let column = begin 
-        try int_of_string h2 with
-        | Failure t -> 8
-      end in 
-      if column > 0 && column < 8 && h1 = "go" then Go (column - 1)
-      else raise Malformed 
-    end 
   | _ -> raise Malformed

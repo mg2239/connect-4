@@ -1,19 +1,18 @@
 open Aiplayer
 open Board
 
-let help_msg =
-  print_string ("\nWelcome to the 3110 Connect Four Game!" ^
-                "\nIn Connect Four, the object of the game is to get " ^
-                "four of your game pieces in a row either vertically, " ^
-                "horizontally, or diagonally." ^
-                "\nYou can also place pieces in a fashion to block your " ^ 
-                "opponent from getting four in a row." ^
-                "\nTo place a game piece, type: \"go (1-7)\" where the " ^
-                "number you input represents the respective column in " ^
-                "the game board." ^
-                "\nType \"quit\" to quit the game." ^
-                "\nIf you need to see this message again, type " ^ 
-                "\"help\" into the console.\n\n")
+let help_msg = 
+  "\nIn Connect Four, the object of the game is to get " ^
+  "four of your game pieces in a row either vertically, " ^
+  "horizontally, or diagonally." ^
+  "\nYou can also place pieces in a fashion to block your " ^ 
+  "opponent from getting four in a row." ^
+  "\nTo place a game piece, type a number \"1-7\" where the " ^
+  "number you input represents the respective column in " ^
+  "the game board." ^
+  "\nType \"quit\" to quit the game." ^
+  "\nIf you need to see this message again, type " ^ 
+  "\"help\" into the console.\n"
 
 (** [game_1 state] takes in user input and reads, evaluates, 
     prints and loops for the Connect Four game. Depending on the user input, 
@@ -41,7 +40,7 @@ let rec game_1 state =
                   game_1 state;
                 end
             end
-          | Command.Help -> help_msg; game_1 state;
+          | Command.Help -> print_string help_msg; game_1 state;
           | Command.Quit -> print_string "Thanks for playing!\n"; exit 0
           | exception Command.Malformed -> begin
               print_string ("Your command was malformed. "^ 
@@ -85,7 +84,7 @@ let rec game_2 state =
               game_2 state;
             end
         end
-      | Command.Help -> help_msg; game_1 state;
+      | Command.Help -> print_string help_msg; game_1 state;
       | Command.Quit -> print_string "Thanks for playing!\n"; exit 0
       | exception Command.Malformed -> begin
           print_string ("Your command was malformed. "^ 
@@ -95,17 +94,18 @@ let rec game_2 state =
     end
 
 let rec start_game () = 
-  print_string ("Choose game mode: 1 Player | 2 Player\n");
+  print_string ("\nChoose game mode: 1 Player | 2 Player\n");
   print_string ("> ");
   match read_line() with
   | "1" | "1 Player" -> game_1 (State.init_state)
   | "2" | "2 Player" -> game_2 (State.init_state)
-  | _ -> print_string "\nInvalid game mode, try again.\n\n"; start_game ()
+  | _ -> print_string "\nInvalid game mode, try again.\n"; start_game ()
 
 (* [main] prompts users with Connect four game instructions and starts the game.
    @param () is of type unit. **)
 let main () = 
-  help_msg; start_game ()
+  print_string ("\nWelcome to the 3110 Connect Four Game!\n" ^ help_msg); 
+  start_game ()
 
 (* [()] executes the main.byte file which runs the game**)
 let () = main ()
