@@ -77,7 +77,7 @@ let eval_tree t =
              (fun (best_sc, best_move) (Node (sc, st, move, c)) ->
                 (if sc > best_sc then (sc, move)
                  else (best_sc, best_move))
-             ) (-100, -1) scored_root_children) with
+             ) (-1000000, -1) scored_root_children) with
     | (sc, m)-> m in
   let Node (sc, state, move, children) = t in
   extract_best_scoring_move (scored_children (children))
