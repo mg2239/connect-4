@@ -1,7 +1,7 @@
 open Board
 open State
 
-let depth = 3
+let depth = 5
 
 (** The minmax tree of possible moves is represented as a 7-ary tree where
     the root node is the current state and the children of a node are the states
@@ -63,11 +63,12 @@ let eval_tree t =
   let rec get_score children curr_score =
     match children with 
     | []-> curr_score
+    | Node (sc, st, m, c)::[]-> get_score c sc
     | Node (sc, st, m, c) :: t -> 
       if State.current_player st = B then 
-        max (get_score c sc) (get_score t curr_score)
+        min (get_score c sc) (get_score t curr_score)
       else 
-        min (get_score c sc) (get_score t curr_score) in
+        max (get_score c sc) (get_score t curr_score) in
   let scored_children root_children = List.map 
       (fun (Node (sc, st, m, c)) -> Node (get_score c sc, st, m, c)) 
       root_children in
@@ -84,4 +85,4 @@ let eval_tree t =
 (** [make_move_ai st] is a result [Legal st'] where [st'] is the state with 
     the new move determined by [eval_tree t]. *)
 let make_move_ai (st:State.t) : State.result = 
-  State.go (eval_tree ((print_string "works up to here");generate_minmax_tree st)) st
+  State.go (eval_tree (generate_minmax_tree st)) st
