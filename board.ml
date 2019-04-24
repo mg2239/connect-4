@@ -202,18 +202,16 @@ let is_full_column board column = not (Array.mem Emp (board.(column)))
 (** [ascii_art board] is a string containing an ASCII art representation
     of [board] that can be printed to the terminal during gameplay. *)
 let ascii_art board =
-  let rec looprows r = 
+  let rec loop r c = 
     if r = -1 then "\n"
-    else
-      let rec loopcols c = 
-        if c = 7 then "\n"
-        else 
-          match board.(c).(r) with 
-          | R -> "\027[31mO\027[0m  " ^ (loopcols (c + 1))
-          | B -> "\027[34mO\027[0m  " ^ (loopcols (c + 1))
-          | Emp -> "O  " ^ (loopcols (c + 1)) in
-      (loopcols 0) ^ (looprows (r - 1)) in
-  looprows 5
+    else if c = 7 then "\n" ^ loop (r - 1) 0
+    else begin
+      match board.(c).(r) with 
+      | R -> "\027[31mO\027[0m  " ^ (loop r (c + 1))
+      | B -> "\027[34mO\027[0m  " ^ (loop r (c + 1))
+      | Emp -> "O  " ^ (loop r (c + 1)) 
+    end in
+  loop 5 0
 
 (** [color_string color] is the color in string format. *)
 let color_string color =
