@@ -1,7 +1,7 @@
 open Board
 open State
 
-let depth = 5
+let depth = 4
 
 (** The minmax tree of possible moves is represented as a 7-ary tree where
     the root node is the current state and the children of a node are the states

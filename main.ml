@@ -21,8 +21,6 @@ let help_msg =
 *)
 let rec game_1 state = 
   print_string ("\n" ^ Board.ascii_art (State.board state));
-  print_int (Board.score (State.board state));
-  print_string ("\n");
   match Board.check_win (State.board state) with 
   | Some c -> print_string ((Board.color_string c) ^ " wins!\n"); exit 0
   | None -> begin
