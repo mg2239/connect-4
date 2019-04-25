@@ -15,15 +15,17 @@ let help_msg =
   "\"help\" into the console.\n"
 
 (** [game_1 state] takes in user input and reads, evaluates, 
-    prints and loops for the Connect Four game. Depending on the user input, 
+    prints and loops the Connect Four game. Depending on the user input, 
     it will update the game state accordingly.
-    @param state is of type State.t and represents the current game state.
-*)
-let rec game_1 state = 
+    @param state The current game state.
+    @param depth The depth of the AI's minimax tree. *)
+let rec game_1 state depth = 
   print_string ("\n" ^ Board.ascii_art (State.board state));
-  match Board.check_win (State.board state) with 
-  | Some c -> print_string ((Board.color_string c) ^ " wins!\n"); exit 0
-  | None -> begin
+  let b = State.board state in
+  match (Board.check_win b, Board.is_full b) with 
+  | (Some c, _) -> print_string ((Board.color_string c) ^ " wins!\n"); exit 0
+  | (None, true) -> print_string "It's a tie!\n"; exit 0
+  | _ -> begin
       let color = Board.color_string (State.current_player state) in
       match color with
       | "Red" -> begin
@@ -32,44 +34,44 @@ let rec game_1 state =
           | Command.Go col -> begin 
               let result = (State.go col state) in
               match result with
-              | Legal updated_state -> game_1 updated_state
+              | Legal updated_state -> game_1 updated_state depth
               | Illegal -> begin
                   print_string "Your move was invalid, please try again.\n";
-                  game_1 state;
+                  game_1 state depth;
                 end
             end
-          | Command.Help -> print_string help_msg; game_1 state;
+          | Command.Help -> print_string help_msg; game_1 state depth;
           | Command.Quit -> print_string "Thanks for playing!\n"; exit 0
           | exception Command.Malformed -> begin
               print_string ("Your command was malformed. "^ 
                             "Please submit a valid command \n");
-              game_1 state;
+              game_1 state depth;
             end
         end
       | "Blue" -> begin
-          let result = Aiplayer.make_move_ai state in
+          print_string "AI is thinking...\n";
+          let result = Aiplayer.make_move_ai state depth in
           match result with
-          | Legal updated_state -> game_1 updated_state
+          | Legal updated_state -> game_1 updated_state depth
           | Illegal -> 
             print_string "Oops AI move was invalid...\n";
-            game_1 state;
+            game_1 state depth;
         end
       | _ -> print_string "Your input was invalid, please try again.\n";
-        game_1 state;
+        game_1 state depth;
     end
 
 (** [game_2 state] takes in user input and reads, evaluates, 
-    prints and loops for the Connect Four game. Depending on the user input, 
+    prints and loops the Connect Four game. Depending on the user input, 
     it will update the game state accordingly.
-    @param state is of type State.t and represents the current game state.
-*)
+    @param state The current game state. *)
 let rec game_2 state = 
   print_string ("\n" ^ Board.ascii_art (State.board state));
-  print_int (Board.score (State.board state));
-  print_string ("\n");
-  match Board.check_win (State.board state) with 
-  | Some c -> print_string ((Board.color_string c) ^ " wins!\n"); exit 0
-  | None -> begin
+  let b = State.board state in
+  match (Board.check_win b, Board.is_full b) with 
+  | (Some c, _) -> print_string ((Board.color_string c) ^ " wins!\n"); exit 0
+  | (None, true) -> print_string "It's a tie!\n"; exit 0
+  | _ -> begin
       let color = Board.color_string (State.current_player state) in
       print_string (color ^ "'s turn: ");
       match (Command.parse (read_line ())) with
@@ -82,7 +84,7 @@ let rec game_2 state =
               game_2 state;
             end
         end
-      | Command.Help -> print_string help_msg; game_1 state;
+      | Command.Help -> print_string help_msg; game_2 state;
       | Command.Quit -> print_string "Thanks for playing!\n"; exit 0
       | exception Command.Malformed -> begin
           print_string ("Your command was malformed. "^ 
@@ -91,19 +93,30 @@ let rec game_2 state =
         end
     end
 
-let rec start_game () = 
-  print_string ("\nChoose game mode: 1 Player | 2 Player\n");
-  print_string ("> ");
+(** [choose_difficulty ()] prompts user to choose the difficulty of the
+    1 player game. *)
+let rec choose_difficulty () = 
+  print_string "\nChoose difficulty: Easy (1) | Medium (2) | Hard (3)\n";
+  print_string "> ";
   match read_line() with
-  | "1" | "1 Player" -> game_1 (State.init_state)
-  | "2" | "2 Player" -> game_2 (State.init_state)
+  | "easy" | "e" | "1" -> game_1 (State.init_state) 2
+  | "medium" | "m" | "2" -> game_1 (State.init_state) 3
+  | "hard" | "h" | "3" -> game_1 (State.init_state) 4
+  | _ -> print_string "\nInvalid difficulty, try again.\n"; choose_difficulty ()
+
+(** [start_game ()] prompts user to choose to play a 1 or 2 player game. *)
+let rec start_game () = 
+  print_string "\nChoose game mode: 1 Player | 2 Player\n";
+  print_string "> ";
+  match String.lowercase_ascii (read_line()) with
+  | "1" | "1 player" -> choose_difficulty ()
+  | "2" | "2 player" -> game_2 (State.init_state)
   | _ -> print_string "\nInvalid game mode, try again.\n"; start_game ()
 
-(* [main] prompts users with Connect four game instructions and starts the game.
-   @param () is of type unit. **)
+(** [main] prompts users with game instructions and starts the game. *)
 let main () = 
   print_string ("\nWelcome to the 3110 Connect Four Game!\n" ^ help_msg); 
   start_game ()
 
-(* [()] executes the main.byte file which runs the game**)
+(** Executes the main.byte file which runs the game. *)
 let () = main ()

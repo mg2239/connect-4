@@ -102,10 +102,9 @@ let make_test_command_malformed
 
 let command_tests =
   [
-    make_test_command "cmd_test1" "go 1" (Go 0);
-    make_test_command "cmd_test2" "go        2" (Go 1);
-    make_test_command "cmd_test3" "     go    7  " 
-      (Go 6);
+    make_test_command "cmd_test1" "1" (Go 0);
+    make_test_command "cmd_test2" "        2" (Go 1);
+    make_test_command "cmd_test3" "        7  " (Go 6);
     make_test_command "cmd_test14" "help" Help;
     make_test_command_malformed "cmd_test4" "go -1 ";
     make_test_command_malformed "cmd_test5" "oh";
@@ -113,7 +112,7 @@ let command_tests =
     make_test_command_malformed "cmd_test7" "       ";
     make_test_command_malformed "cmd_test8" "go   ";
     make_test_command_malformed "cmd_test9" "GO";
-    make_test_command_malformed "cmd_test10" "1";
+    make_test_command_malformed "cmd_test10" "11";
     make_test_command_malformed "cmd_test11" "help me";
     make_test_command_malformed "cmd_test12" "go 7 R";
     make_test_command_malformed "cmd_test13" "B";
