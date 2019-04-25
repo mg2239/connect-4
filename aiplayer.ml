@@ -22,11 +22,11 @@ let generate_minmax_tree st depth =
       if count = 7 then []
       else 
         match go count curr_state with
-        |Legal res -> 
+        | Legal res -> 
           let check_win_res = check_win (board res) in
-          if check_win_res=None then
-            Node (-500, res, count, gen_children res (d+1))
-            ::(loop_norm (count+1))
+          if check_win_res = None then
+            Node (-100, res, count, gen_children res (d + 1))
+            :: (loop_norm (count + 1))
           else if check_win_res=(Some (B))
           then Node (100, res, count, [])::(loop_norm (count+1))
           else Node (-500, res, count, [])::(loop_norm (count+1))
@@ -36,11 +36,11 @@ let generate_minmax_tree st depth =
       if count = 7 then []
       else 
         match go count curr_state with
-        |Legal res -> 
+        | Legal res -> 
           let check_win_res = check_win (board res) in
           if check_win_res=None then
             Node (Board.score (board res), res, count, [])
-            ::(loop_leaf (count+1))
+            :: (loop_leaf (count + 1))
           else if check_win_res=(Some (B)) 
           then Node (100, res, count, [])::(loop_leaf (count+1))
           else Node (-500, res, count, [])::(loop_leaf (count+1))
