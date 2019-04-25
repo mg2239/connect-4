@@ -17,6 +17,7 @@ type minmaxtree = Node of int * State.t * int * minmaxtree list
 let generate_minmax_tree st depth = 
   (*gen_children *)
   let rec gen_children curr_state d =
+    (*recursive loop to create inner nodes in minmax tree *)
     let rec loop_norm count = 
       if count = 7 then []
       else 
@@ -30,6 +31,7 @@ let generate_minmax_tree st depth =
           then Node (100, res, count, [])::(loop_norm (count+1))
           else Node (-500, res, count, [])::(loop_norm (count+1))
         |Illegal -> (loop_norm (count + 1)) in 
+    (*recursive loop to create the leaf layer in the minmax tree *)
     let rec loop_leaf count = 
       if count = 7 then []
       else 
@@ -41,7 +43,7 @@ let generate_minmax_tree st depth =
             ::(loop_leaf (count+1))
           else if check_win_res=(Some (B)) 
           then Node (100, res, count, [])::(loop_leaf (count+1))
-          else Node (-100, res, count, [])::(loop_leaf (count+1))
+          else Node (-500, res, count, [])::(loop_leaf (count+1))
         |Illegal -> (loop_leaf (count + 1)) in 
     if d = depth then loop_leaf 0 (*create the leaf layer *)
     else loop_norm 0 in
@@ -52,18 +54,32 @@ let generate_minmax_tree st depth =
 (** [eval_tree t] is the column number that the AI should play in, determined by
     evaluating a minmax tree [t]. *)
 let eval_tree t = 
+
+  (**[get score children curr_score] returns the best score for the AI by 
+     comparing all the leaves in the min max tree. [children] is a minmaxtree list
+     representing a layer in the tree. At each node, the minimum or maximum score
+     is selected depending on whether the current player is Red or Blue. This
+     is where the minmax algorithm is implemented.*)
   let rec get_score children curr_score =
     match children with 
-    | []-> curr_score
-    | Node (sc, st, m, c)::[]-> get_score c sc
+    | []-> curr_score (*reached leaf*)
+    | Node (sc, st, m, c)::[]-> get_score c sc (*reached last node in layer*)
     | Node (sc, st, m, c) :: t -> 
-      if State.current_player st = B then 
+      if State.current_player st = B then (*human's turn is next *)
         min (get_score c sc) (get_score t curr_score)
-      else 
+      else (*AI's turn is next*)
         max (get_score c sc) (get_score t curr_score) in
+
+  (*[scored_children root_children] scores the second layer 
+    (children of the root node) in the minmaxtree, which represents the immediate 
+    possible next moves *)
   let scored_children root_children = List.map 
       (fun (Node (sc, st, m, c)) -> Node (get_score c sc, st, m, c)) 
       root_children in
+
+  (**[extract_best_scoring_move scored_root_children] takes in the scored list
+     of children produced by scored_schildren and returns the move with the best 
+     score*)
   let extract_best_scoring_move scored_root_children =
     match (List.fold_left 
              (fun (best_sc, best_move) (Node (sc, st, move, c)) ->
