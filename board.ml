@@ -9,7 +9,8 @@ type color = R | B | Emp
 *)
 type t = color array array
 
-(** empty board, inner arrays are columns, outer array is rows *)
+(** [empty] represents an empty gameboard. empty board, inner arrays 
+    are columns, outer array is rows*)
 let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|]; 
               [|Emp; Emp; Emp; Emp; Emp; Emp|]; 
               [|Emp; Emp; Emp; Emp; Emp; Emp|]; 
@@ -19,7 +20,8 @@ let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|] |]
 
 
-(** [board_copy board] takes in a [board] and produces a replica board. *)
+(** [board_copy] takes in a [board] and produces a replica
+    board. Creates a fresh 2 dimensional array with the same elements as [board] *)
 let board_copy board =
   let new_board = Array.make 7 (Array.make 6 Emp) in 
   (for x=0 to 6 do
@@ -41,10 +43,10 @@ let make_move board column color =
     loop 0 in
   (*change the bottom most empty slot in the column to [color]. Discard result
     of unit and return the new board *)
-  (new_board.(column).(find_top (new_board.(column)))<-color);  new_board
+  ((new_board.(column).(find_top (new_board.(column)))<-color);  new_board)
 
 (**[get_as_list] takes in a [board] and produces a list
-   representation of its data *))
+   representation of its data *)
 let get_as_list (board: color array array) = 
   let rec loop acc =
     if acc = 7 then []
@@ -184,6 +186,12 @@ let check_win (board:color array array) =
   let check_rows grid = 
     let rec loop r =
       if r = 4 then None
+      (*checks 4 connected disks along rows of subgrid:
+        e.g.
+        0 0 0 0
+        X X X X this is row r
+        0 0 0 0
+        0 0 0 0 *) 
       else if grid.(0).(r) = grid.(1).(r) && 
               grid.(1).(r) = grid.(2).(r) && 
               grid.(2).(r) = grid.(3).(r) && 
@@ -194,9 +202,16 @@ let check_win (board:color array array) =
   let check_cols grid = 
     let rec loop c = 
       if c = 4 then None
-      else if grid.(c).(0) = grid.(c).(1) && 
-              grid.(c).(1) = grid.(c).(2) && 
-              grid.(c).(2) = grid.(c).(3) && 
+      (*checks 4 connected disks along columns of subgrid:
+        e.g.
+          c
+        0 X 0 0
+        0 X 0 0
+        0 X 0 0
+        0 X 0 0 *) 
+      else if (grid.(c).(0) = grid.(c).(1)) && 
+              (grid.(c).(1) = grid.(c).(2)) && 
+              (grid.(c).(2) = grid.(c).(3)) && 
               grid.(c).(0) <> Emp
       then Some (grid.(c).(0))
       else loop (c + 1) in 
@@ -212,6 +227,11 @@ let check_win (board:color array array) =
        grid.(2).(1) = grid.(3).(0) && 
        grid.(0).(3) <> Emp
     then Some (grid.(0).(3))
+    (*checks 4 connected disks along subgrid:
+      0 0 0 X
+      0 0 X 0
+      0 X 0 0
+      X 0 0 0 *) 
     else if grid.(0).(0) = grid.(1).(1) && 
             grid.(1).(1) = grid.(2).(2) && 
             grid.(2).(2) = grid.(3).(3) && 
@@ -219,15 +239,31 @@ let check_win (board:color array array) =
     then Some (grid.(0).(0))
     else None
   in 
+  (**[sub_array_2d arr x_start x_len y_start y_len] is the subarray of a 
+     2 dimensional array [arr] with the outer array starting at x_start upto 
+     ([x_start] + [x_len] - 1) and the inner array starting at y_start upto 
+     ([y_start] + [y_len] - 1) 
+
+     example: let arr = [|[|B; R; R; B|];
+                       [|R; B; B; R|];
+                       [|B; R; B; R|];
+                       [|B; B; R; R|]|]
+          [sub_array_2d arr 1 2 0 3] returns [|[|R; B; B|];
+                                               [|B; R; B|]]  *)
   let sub_array_2d (arr: t) x_start x_len y_start y_len = 
-    let x_sub = Array.sub arr x_start x_len in
-    ((for x = 0 to x_len - 1
+    let x_sub = Array.sub arr x_start x_len in (*slices outer array*)
+    ((for x = 0 to x_len - 1 (*slices each column in inner array *)
       do x_sub.(x) <- Array.sub x_sub.(x) y_start y_len done); x_sub) in
+  (*loop through all 4x4 subgrids on the board. There are 4 subgrids 
+    horizontally and 3 vertically *)
   let rec loop col row = 
     if col = 3 then None
     else if row = 4 then loop (col + 1) 0
     else begin
-      let subgrid = sub_array_2d board row 4 col 4 in
+      (*get the next 4x4 subgrid *)
+      let subgrid = sub_array_2d board row 4 col 4 in 
+      (*check results of [check_diags], [check_cols] and [check_rows] on the 
+        current subgrid *)
       match (check_diags subgrid, check_cols subgrid, check_rows subgrid) with
       | (None, None, None) -> loop col (row + 1)
       | (None, None, c) | (None, c, _) | (c, _, _) -> c
@@ -276,6 +312,9 @@ let score board =
     | None -> 0 in
   loop_2x2 0 0 0 + loop_3x3 0 0 0 + win_score board
 
+(** [filled_slots_helper column] is the number of filled slots, that is non 
+    [Emp] postions in the color array [column] which is a single column in a board
+    of type t*)
 let filled_slots_helper column  = 
   let rec loop counter =
     if counter = 6 then 0
@@ -301,8 +340,9 @@ let is_full_column board column = not (Array.mem Emp (board.(column)))
     of [board] that can be printed to the terminal during gameplay. *)
 let ascii_art board =
   let rec loop r c = 
-    if r = -1 then "\027[33m1  2  3  4  5  6  7  \027[0m\n\n"
-    else if c = 7 then "\n" ^ loop (r - 1) 0
+    if r = -1 then "\027[33m1  2  3  4  5  6  7  \027[0m\n\n" (*column numbers*)
+    (*reached last column in row, go to next row *)
+    else if c = 7 then "\n" ^ loop (r - 1) 0 
     else begin
       match board.(c).(r) with 
       | R -> "\027[31mO\027[0m  " ^ (loop r (c + 1))
