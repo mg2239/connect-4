@@ -68,6 +68,18 @@ let test_full_board
     (expected_output: bool) : test = 
   name>:: (fun _ -> assert_equal expected_output (is_full board))
 
+
+(** [make_test_board_filled_slots name board expected_output] 
+    constructs an OUnit test named [name] that asserts the quality of 
+    [expected_output] with [filled_slots board]. *)
+let make_test_board_filled_slots
+    (name: string)
+    (board: Board.t)
+    (expected_output: int) : test =
+  name >:: (fun _ -> assert_equal
+               expected_output (filled_slots board))
+
+
 let empty_board = Board.empty
 let board1 = Board.make_move empty_board 0 R
 let board2 = Board.make_move board1 0 B
@@ -84,7 +96,6 @@ let board12 = Board.make_move board11 2 B
 let board13 = Board.make_move board12 2 R
 let board14 = Board.make_move board13 3 R
 let board_full = generate_full_board
-
 
 let board_tests = [
   make_test_board_get_as_list "bd_test_empty" empty_board 
@@ -128,6 +139,9 @@ let board_tests = [
   test_full_board "not full board 5" board5 (false);
   test_full_board "not full board 6" board6 (false);
   test_full_board "full board" board_full (true);
+  make_test_board_filled_slots "bd_test_filled_slots1" board14 10;
+  make_test_board_filled_slots "bd_test_filled_slots2" empty_board 0;
+  make_test_board_filled_slots "bd_test_filled_slots3" board_full 42;
 ]
 
 (** [result_match] returns a state given an option result. *)
