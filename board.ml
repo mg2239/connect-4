@@ -9,7 +9,7 @@ type color = R | B | Emp
 *)
 type t = color array array
 
-(**  *)
+(** empty board, inner arrays are columns, outer array is rows *)
 let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|]; 
               [|Emp; Emp; Emp; Emp; Emp; Emp|]; 
               [|Emp; Emp; Emp; Emp; Emp; Emp|]; 
@@ -18,7 +18,7 @@ let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|] |]
 
-(**  *)
+(**Creates a fresh 2 dimensional array with the same elements as [board] *)
 let board_copy board =
   let new_board = Array.make 7 (Array.make 6 Emp) in 
   (for x=0 to 6 do
@@ -28,13 +28,18 @@ let board_copy board =
     of color [color] into the column numbered [column] where [column] is a number
     in the range [0..6] counting from the left. *)
 let make_move board column color = 
-  let new_board = board_copy board in
+  (*create a new copy of [board] so original board is unchanged, necessary 
+    because [board] is a mutable array *)
+  let new_board = board_copy board in 
   let find_top col = 
+    (*loop through all the elements in a single column of the board *)
     let rec loop count =
-      if col.(count) = Emp then count 
-      else if count = 7 then failwith "Invalid Move"
-      else loop (count+1) in
+      if col.(count) = Emp then count (*found the bottommost empty slot*)
+      else if count = 7 then failwith "Invalid Move" (*column is full*)
+      else loop (count+1) in (*next iteration of loop*)
     loop 0 in
+  (*change the bottom most empty slot in the column to [color]. Discard result
+    of unit and return the new board *)
   (new_board.(column).(find_top (new_board.(column)))<-color);  new_board
 
 let get_as_list (board: color array array) = 
@@ -125,7 +130,12 @@ let check_win (board:color array array) =
       then Some (grid.(c).(0))
       else loop (c + 1) in 
     loop 0 in
-  let check_diags grid = 
+  let check_diags grid =
+    (*checks 4 connected disks along subgrid:
+      X 0 0 0
+      0 X 0 0
+      0 0 X 0
+      0 0 0 X *) 
     if (grid.(0).(3) = grid.(1).(2)) && 
        (grid.(1).(2) = grid.(2).(1)) && 
        (grid.(2).(1) = grid.(3).(0)) && 
@@ -177,7 +187,8 @@ let score board =
     | None -> 0 in
   loop 0 0 0 + win_score board
 
-(**  *)
+(**helper function to count the number of filled slot (i.e. not Emp) slots in
+   [column] *)
 let filled_slots_helper column  = 
   let rec loop counter =
     if counter = 6 then 0
