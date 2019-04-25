@@ -35,6 +35,7 @@ let make_test_board_check_win
   name >:: (fun _ -> assert_equal
                expected_output (check_win board))
 
+(**[generate_full_board] is a board with all slots filled with R and B disks*)
 let generate_full_board = 
   let emp_board = Board.empty in
   let rec loop count board color= 
@@ -47,6 +48,9 @@ let generate_full_board =
       loop (count+1) (Board.make_move board (count mod 7) color) next_color in 
   loop 0 emp_board R
 
+(** [test_full_board name board expected_output] 
+    constructs an OUnit test named [name] that asserts the quality of 
+    [expected_output] with [is_full board]. *)
 let test_full_board  
     (name: string)
     (board: Board.t)
@@ -92,6 +96,9 @@ let board_tests = [
   make_test_board_check_win "bd_test_check_win2" board1 None;
   make_test_board_check_win "bd_test_check_win3" board8 (Some R);
   make_test_board_check_win "bd_test_check_win4" board14 (Some R);
+  make_test_board_check_win "bd_test_check_win2" board2 None;
+  make_test_board_check_win "bd_test_check_win2" board3 None;
+  make_test_board_check_win "bd_test_check_win2" board4 None;
   test_full_board "not full board 0" empty_board (false);
   test_full_board "not full board 1" board1 (false);
   test_full_board "not full board 2" board2 (false);

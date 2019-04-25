@@ -24,11 +24,11 @@ let generate_minmax_tree st depth =
         |Legal res -> 
           let check_win_res = check_win (board res) in
           if check_win_res=None then
-            Node (-100, res, count, gen_children res (d+1))
+            Node (-500, res, count, gen_children res (d+1))
             ::(loop_norm (count+1))
           else if check_win_res=(Some (B))
           then Node (100, res, count, [])::(loop_norm (count+1))
-          else Node (-100, res, count, [])::(loop_norm (count+1))
+          else Node (-500, res, count, [])::(loop_norm (count+1))
         |Illegal -> (loop_norm (count + 1)) in 
     let rec loop_leaf count = 
       if count = 7 then []
