@@ -1,8 +1,6 @@
 open Board
 open State
 
-let depth = 4
-
 (** The minmax tree of possible moves is represented as a 7-ary tree where
     the root node is the current state and the children of a node are the states
     resulting from possible moves. A leaf in the tree is represented by a node
@@ -16,15 +14,13 @@ type minmaxtree = Node of int * State.t * int * minmaxtree list
 (** [generate_minmax_tree st] is a minmax tree based on the current state [st].
     Takes into account whether a column is full, and stops tree if column is 
     full. *)
-let generate_minmax_tree st = 
+let generate_minmax_tree st depth = 
   (*gen_children *)
   let rec gen_children curr_state d =
-
     let rec loop_norm count = 
       if count = 7 then []
       else 
         match go count curr_state with
-
         |Legal res -> 
           let check_win_res = check_win (board res) in
           if check_win_res=None then
@@ -34,8 +30,6 @@ let generate_minmax_tree st =
           then Node (100, res, count, [])::(loop_norm (count+1))
           else Node (-100, res, count, [])::(loop_norm (count+1))
         |Illegal -> (loop_norm (count + 1)) in 
-
-
     let rec loop_leaf count = 
       if count = 7 then []
       else 
@@ -49,9 +43,7 @@ let generate_minmax_tree st =
           then Node (100, res, count, [])::(loop_leaf (count+1))
           else Node (-100, res, count, [])::(loop_leaf (count+1))
         |Illegal -> (loop_leaf (count + 1)) in 
-
-    if d = depth then loop_leaf 0(*create the leaf layer *)
-
+    if d = depth then loop_leaf 0 (*create the leaf layer *)
     else loop_norm 0 in
   (* loop over 7 Nodes *)
   (* call gen_Children on the root *)
@@ -84,5 +76,5 @@ let eval_tree t =
 
 (** [make_move_ai st] is a result [Legal st'] where [st'] is the state with 
     the new move determined by [eval_tree t]. *)
-let make_move_ai (st:State.t) : State.result = 
-  State.go (eval_tree (generate_minmax_tree st)) st
+let make_move_ai (st:State.t) d : State.result = 
+  State.go (eval_tree (generate_minmax_tree st d)) st

@@ -216,7 +216,7 @@ let is_full_column board column = not (Array.mem Emp (board.(column)))
     of [board] that can be printed to the terminal during gameplay. *)
 let ascii_art board =
   let rec loop r c = 
-    if r = -1 then "\n"
+    if r = -1 then "\027[33m1  2  3  4  5  6  7  \027[0m\n\n"
     else if c = 7 then "\n" ^ loop (r - 1) 0
     else begin
       match board.(c).(r) with 
@@ -232,5 +232,3 @@ let color_string color =
   | R -> "Red"
   | B -> "Blue"
   | Emp -> "Emp"
-
-
