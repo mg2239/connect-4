@@ -21,29 +21,29 @@ let generate_minmax_tree st depth =
       if count = 7 then []
       else 
         match go count curr_state with
-        |Legal res -> 
+        | Legal res -> 
           let check_win_res = check_win (board res) in
-          if check_win_res=None then
-            Node (-100, res, count, gen_children res (d+1))
-            ::(loop_norm (count+1))
+          if check_win_res = None then
+            Node (-100, res, count, gen_children res (d + 1))
+            :: (loop_norm (count + 1))
           else if check_win_res=(Some (B))
-          then Node (100, res, count, [])::(loop_norm (count+1))
-          else Node (-100, res, count, [])::(loop_norm (count+1))
-        |Illegal -> (loop_norm (count + 1)) in 
+          then Node (100, res, count, []) :: (loop_norm (count + 1))
+          else Node (-100, res, count, []) :: (loop_norm (count + 1))
+        | Illegal -> (loop_norm (count + 1)) in 
     let rec loop_leaf count = 
       if count = 7 then []
       else 
         match go count curr_state with
-        |Legal res -> 
+        | Legal res -> 
           let check_win_res = check_win (board res) in
           if check_win_res=None then
             Node (Board.score (board res), res, count, [])
-            ::(loop_leaf (count+1))
+            :: (loop_leaf (count + 1))
           else if check_win_res=(Some (B)) 
-          then Node (100, res, count, [])::(loop_leaf (count+1))
-          else Node (-100, res, count, [])::(loop_leaf (count+1))
-        |Illegal -> (loop_leaf (count + 1)) in 
-    if d = depth then loop_leaf 0 (*create the leaf layer *)
+          then Node (100, res, count, []) :: (loop_leaf (count + 1))
+          else Node (-100, res, count, []) :: (loop_leaf (count + 1))
+        | Illegal -> (loop_leaf (count + 1)) in 
+    if d = depth then loop_leaf 0 (* create the leaf layer *)
     else loop_norm 0 in
   (* loop over 7 Nodes *)
   (* call gen_Children on the root *)
