@@ -9,7 +9,7 @@ type color = R | B | Emp
 *)
 type t = color array array
 
-(**  *)
+(** empty board, inner arrays are columns, outer array is rows *)
 let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|]; 
               [|Emp; Emp; Emp; Emp; Emp; Emp|]; 
               [|Emp; Emp; Emp; Emp; Emp; Emp|]; 
@@ -18,7 +18,8 @@ let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|] |]
 
-(**  *)
+
+(** [board_copy board] takes in a [board] and produces a replica board. *)
 let board_copy board =
   let new_board = Array.make 7 (Array.make 6 Emp) in 
   (for x=0 to 6 do
@@ -28,22 +29,31 @@ let board_copy board =
     of color [color] into the column numbered [column] where [column] is a number
     in the range [0..6] counting from the left. *)
 let make_move board column color = 
-  let new_board = board_copy board in
+  (*create a new copy of [board] so original board is unchanged, necessary 
+    because [board] is a mutable array *)
+  let new_board = board_copy board in 
   let find_top col = 
+    (*loop through all the elements in a single column of the board *)
     let rec loop count =
-      if col.(count) = Emp then count 
-      else if count = 7 then failwith "Invalid Move"
-      else loop (count+1) in
+      if col.(count) = Emp then count (*found the bottommost empty slot*)
+      else if count = 7 then failwith "Invalid Move" (*column is full*)
+      else loop (count+1) in (*next iteration of loop*)
     loop 0 in
+  (*change the bottom most empty slot in the column to [color]. Discard result
+    of unit and return the new board *)
   (new_board.(column).(find_top (new_board.(column)))<-color);  new_board
 
+(**[get_as_list] takes in a [board] and produces a list
+   representation of its data *))
 let get_as_list (board: color array array) = 
   let rec loop acc =
     if acc = 7 then []
     else Array.to_list(board.(acc))::(loop (acc+1)) in
   loop 0
 
-(**  *)
+(** [score_2x2] takes in a [grid] and produces an [int]
+    representing the total number of two-in-a-rows held by the AI
+    subtracted by the two-in-a-rows held by the player within a 2x2 grid.*)
 let score_2x2 grid =
   let check_rows grid = 
     let rec loop r acc =
@@ -142,6 +152,9 @@ let score_3x3 grid =
     else 0 in
   check_rows grid + check_cols grid + check_diags grid
 
+(** [score_1x2] takes in a [grid] and produces an [int]
+    representing the total number of two-in-a-rows held by the AI
+    subtracted by the three-in-a-rows held by the player within a 1x2 grid.*)
 let score_1x2 grid = 
   if grid.(0).(0) = grid.(0).(1) && 
      grid.(0).(0) <> Emp
@@ -189,6 +202,11 @@ let check_win (board:color array array) =
       else loop (c + 1) in 
     loop 0 in
   let check_diags grid = 
+    (*checks 4 connected disks along subgrid:
+      X 0 0 0
+      0 X 0 0
+      0 0 X 0
+      0 0 0 X *) 
     if grid.(0).(3) = grid.(1).(2) && 
        grid.(1).(2) = grid.(2).(1) && 
        grid.(2).(1) = grid.(3).(0) && 
@@ -216,6 +234,11 @@ let check_win (board:color array array) =
     end in
   loop 0 0
 
+(** [score board] takes in a [board] and produces an [int]
+    representing the total number of three-in-a-rows held by the AI
+    subtracted by the three-in-a-rows held by the player within the current
+    game state. A ten-point bonus is added to the score if the AI has produced
+    a game-winning state.*)
 let score board =
   let sub_array_2d arr x_start x_len y_start y_len = 
     let x_sub = Array.sub arr x_start x_len in
@@ -253,7 +276,6 @@ let score board =
     | None -> 0 in
   loop_2x2 0 0 0 + loop_3x3 0 0 0 + win_score board
 
-(**  *)
 let filled_slots_helper column  = 
   let rec loop counter =
     if counter = 6 then 0
