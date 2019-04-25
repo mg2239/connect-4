@@ -9,7 +9,7 @@ type color = R | B | Emp
 *)
 type t = color array array
 
-(** [empty] represents an empty gameboard*)
+(** empty board, inner arrays are columns, outer array is rows *)
 let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|]; 
               [|Emp; Emp; Emp; Emp; Emp; Emp|]; 
               [|Emp; Emp; Emp; Emp; Emp; Emp|]; 
@@ -18,8 +18,8 @@ let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|] |]
 
-(** [board_copy] takes in a [board] and produces a replica
-board. *)
+
+(** [board_copy board] takes in a [board] and produces a replica board. *)
 let board_copy board =
   let new_board = Array.make 7 (Array.make 6 Emp) in 
   (for x=0 to 6 do
@@ -29,17 +29,22 @@ let board_copy board =
     of color [color] into the column numbered [column] where [column] is a number
     in the range [0..6] counting from the left. *)
 let make_move board column color = 
-  let new_board = board_copy board in
+  (*create a new copy of [board] so original board is unchanged, necessary 
+    because [board] is a mutable array *)
+  let new_board = board_copy board in 
   let find_top col = 
+    (*loop through all the elements in a single column of the board *)
     let rec loop count =
-      if col.(count) = Emp then count 
-      else if count = 7 then failwith "Invalid Move"
-      else loop (count+1) in
+      if col.(count) = Emp then count (*found the bottommost empty slot*)
+      else if count = 7 then failwith "Invalid Move" (*column is full*)
+      else loop (count+1) in (*next iteration of loop*)
     loop 0 in
+  (*change the bottom most empty slot in the column to [color]. Discard result
+    of unit and return the new board *)
   (new_board.(column).(find_top (new_board.(column)))<-color);  new_board
 
 (**[get_as_list] takes in a [board] and produces a list
-representation of its data *))
+   representation of its data *))
 let get_as_list (board: color array array) = 
   let rec loop acc =
     if acc = 7 then []
@@ -47,8 +52,8 @@ let get_as_list (board: color array array) =
   loop 0
 
 (** [score_2x2] takes in a [grid] and produces an [int]
-representing the total number of two-in-a-rows held by the AI
-subtracted by the two-in-a-rows held by the player within a 2x2 grid.*)
+    representing the total number of two-in-a-rows held by the AI
+    subtracted by the two-in-a-rows held by the player within a 2x2 grid.*)
 let score_2x2 grid =
   let check_rows grid = 
     let rec loop r acc =
@@ -66,7 +71,7 @@ let score_2x2 grid =
   let check_cols grid = 
     let rec loop c acc = 
       if c = 2 then acc
-      else if (grid.(c).(0) = grid.(c).(1)) && 
+      else if grid.(c).(0) = grid.(c).(1) && 
               grid.(c).(0) <> Emp
       then begin
         match grid.(c).(0) with
@@ -77,7 +82,7 @@ let score_2x2 grid =
       else loop (c + 1) acc in 
     loop 0 0 in
   let check_diags grid = 
-    if (grid.(0).(1) = grid.(1).(0)) && 
+    if grid.(0).(1) = grid.(1).(0) && 
        grid.(0).(1) <> Emp
     then begin
       match grid.(0).(1) with
@@ -96,16 +101,79 @@ let score_2x2 grid =
     else 0 in
   check_rows grid + check_cols grid + check_diags grid
 
+let score_3x3 grid =
+  let check_rows grid = 
+    let rec loop r acc =
+      if r = 3 then acc
+      else if grid.(0).(r) = grid.(1).(r) && 
+              grid.(1).(r) = grid.(2).(r) && 
+              grid.(0).(r) <> Emp
+      then begin
+        match grid.(0).(r) with
+        | R -> loop (r + 1) (acc - 5)
+        | B -> loop (r + 1) (acc + 5)
+        | _ -> failwith "invalid"
+      end 
+      else loop (r + 1) acc in 
+    loop 0 0 in
+  let check_cols grid = 
+    let rec loop c acc = 
+      if c = 3 then acc
+      else if grid.(c).(0) = grid.(c).(1) && 
+              grid.(c).(1) = grid.(c).(2) && 
+              grid.(c).(0) <> Emp
+      then begin
+        match grid.(c).(0) with
+        | R -> loop (c + 1) (acc - 5)
+        | B -> loop (c + 1) (acc + 5)
+        | _ -> failwith "invalid"
+      end 
+      else loop (c + 1) acc in 
+    loop 0 0 in
+  let check_diags grid = 
+    if grid.(0).(1) = grid.(1).(1) && 
+       grid.(1).(1) = grid.(2).(0) && 
+       grid.(0).(1) <> Emp
+    then begin
+      match grid.(0).(1) with
+      | R -> -5
+      | B -> 5
+      | _ -> failwith "invalid"
+    end 
+    else if grid.(0).(0) = grid.(1).(1) && 
+            grid.(1).(1) = grid.(2).(2) && 
+            grid.(0).(0) <> Emp
+    then begin
+      match grid.(0).(0) with
+      | R -> -5
+      | B -> 5
+      | _ -> failwith "invalid"
+    end 
+    else 0 in
+  check_rows grid + check_cols grid + check_diags grid
+
 (** [score_1x2] takes in a [grid] and produces an [int]
-representing the total number of two-in-a-rows held by the AI
-subtracted by the three-in-a-rows held by the player within a 1x2 grid.*)
+    representing the total number of two-in-a-rows held by the AI
+    subtracted by the three-in-a-rows held by the player within a 1x2 grid.*)
 let score_1x2 grid = 
-  if (grid.(0).(0) = grid.(0).(1)) && 
+  if grid.(0).(0) = grid.(0).(1) && 
      grid.(0).(0) <> Emp
   then begin
     match grid.(0).(0) with
     | R -> -1
     | B -> 1
+    | _ -> failwith "invalid"
+  end 
+  else 0
+
+let score_1x3 grid = 
+  if grid.(0).(0) = grid.(0).(1) && 
+     grid.(0).(1) = grid.(0).(2) &&
+     grid.(0).(0) <> Emp
+  then begin
+    match grid.(0).(0) with
+    | R -> -5
+    | B -> 5
     | _ -> failwith "invalid"
   end 
   else 0
@@ -126,17 +194,22 @@ let check_win (board:color array array) =
   let check_cols grid = 
     let rec loop c = 
       if c = 4 then None
-      else if (grid.(c).(0) = grid.(c).(1)) && 
-              (grid.(c).(1) = grid.(c).(2)) && 
-              (grid.(c).(2) = grid.(c).(3)) && 
+      else if grid.(c).(0) = grid.(c).(1) && 
+              grid.(c).(1) = grid.(c).(2) && 
+              grid.(c).(2) = grid.(c).(3) && 
               grid.(c).(0) <> Emp
       then Some (grid.(c).(0))
       else loop (c + 1) in 
     loop 0 in
   let check_diags grid = 
-    if (grid.(0).(3) = grid.(1).(2)) && 
-       (grid.(1).(2) = grid.(2).(1)) && 
-       (grid.(2).(1) = grid.(3).(0)) && 
+    (*checks 4 connected disks along subgrid:
+      X 0 0 0
+      0 X 0 0
+      0 0 X 0
+      0 0 0 X *) 
+    if grid.(0).(3) = grid.(1).(2) && 
+       grid.(1).(2) = grid.(2).(1) && 
+       grid.(2).(1) = grid.(3).(0) && 
        grid.(0).(3) <> Emp
     then Some (grid.(0).(3))
     else if grid.(0).(0) = grid.(1).(1) && 
@@ -162,34 +235,46 @@ let check_win (board:color array array) =
   loop 0 0
 
 (** [score board] takes in a [board] and produces an [int]
-representing the total number of three-in-a-rows held by the AI
-subtracted by the three-in-a-rows held by the player within the current
-game state. A ten-point bonus is added to the score if the AI has produced
-a game-winning state.*)
+    representing the total number of three-in-a-rows held by the AI
+    subtracted by the three-in-a-rows held by the player within the current
+    game state. A ten-point bonus is added to the score if the AI has produced
+    a game-winning state.*)
 let score board =
   let sub_array_2d arr x_start x_len y_start y_len = 
     let x_sub = Array.sub arr x_start x_len in
     ((for x = 0 to x_len - 1
       do x_sub.(x) <- Array.sub x_sub.(x) y_start y_len done); x_sub) in
-  let rec loop col row acc = 
+  let rec loop_2x2 col row acc = 
     if col > 4 then acc
-    else if row > 6 then loop (col + 2) 0 acc
+    else if row > 6 then loop_2x2 (col + 2) 0 acc
     else begin
       if row <> 6 then begin
         let subgrid = sub_array_2d board row 2 col 2 in
-        loop col (row + 2) (acc + score_2x2 subgrid)
+        loop_2x2 col (row + 2) (acc + score_2x2 subgrid)
       end
       else begin 
         let subgrid = sub_array_2d board row 1 col 2 in
-        loop col (row + 1) (acc + score_1x2 subgrid)
+        loop_2x2 col (row + 1) (acc + score_1x2 subgrid)
+      end
+    end in 
+  let rec loop_3x3 col row acc = 
+    if col > 4 then acc
+    else if row > 6 then loop_3x3 (col + 3) 0 acc
+    else begin
+      if row <> 6 then begin
+        let subgrid = sub_array_2d board row 3 col 3 in
+        loop_3x3 col (row + 3) (acc + score_3x3 subgrid)
+      end
+      else begin 
+        let subgrid = sub_array_2d board row 1 col 3 in
+        loop_3x3 col (row + 1) (acc + score_1x3 subgrid)
       end
     end in 
   let win_score board = 
     match check_win board with 
-    | Some c -> if c = R then -50 else 50
+    | Some c -> if c = R then -50 else 40
     | None -> 0 in
-  loop 0 0 0 + win_score board
-
+  loop_2x2 0 0 0 + loop_3x3 0 0 0 + win_score board
 
 let filled_slots_helper column  = 
   let rec loop counter =
