@@ -35,6 +35,17 @@ let make_test_board_check_win
   name >:: (fun _ -> assert_equal
                expected_output (check_win board))
 
+
+(** [make_test_board_filled_slots name board expected_output] 
+    constructs an OUnit test named [name] that asserts the quality of 
+    [expected_output] with [filled_slots board]. *)
+let make_test_board_filled_slots
+    (name: string)
+    (board: Board.t)
+    (expected_output: int) : test =
+  name >:: (fun _ -> assert_equal
+               expected_output (filled_slots board))
+
 let empty_board = Board.empty
 let board1 = Board.make_move empty_board 0 R
 let board2 = Board.make_move board1 0 B
@@ -50,7 +61,6 @@ let board11 = Board.make_move board10 1 R
 let board12 = Board.make_move board11 2 B
 let board13 = Board.make_move board12 2 R
 let board14 = Board.make_move board13 3 R
-
 
 
 let board_tests = [
@@ -74,6 +84,9 @@ let board_tests = [
   make_test_board_check_win "bd_test_check_win2" board1 None;
   make_test_board_check_win "bd_test_check_win3" board8 (Some R);
   make_test_board_check_win "bd_test_check_win4" board14 (Some R);
+  make_test_board_filled_slots "bd_test_filled_slots1" empty_board 0;
+  make_test_board_filled_slots "bd_test_filled_slots2" board1 1;
+
 
 ]
 
@@ -90,13 +103,13 @@ let st3 = result_match st3_result
 
 (**CHECK THIS OUT IMAAN WE NEED A TESTS FOR A FULL BOARD *)
 let board_function_tests = [
-   "board test_is_full 1" >:: (fun _ ->
+  "board test_is_full 1" >:: (fun _ ->
       assert_equal (Board.is_full empty_board) false); 
-   "board test_is_full 2" >:: (fun _ ->
+  "board test_is_full 2" >:: (fun _ ->
       assert_equal (Board.is_full board1) false);
-    "board test_is_full 2" >:: (fun _ ->
+  "board test_is_full 2" >:: (fun _ ->
       assert_equal (Board.is_full board2) false);
-  ]
+]
 
 
 let state_tests = [
