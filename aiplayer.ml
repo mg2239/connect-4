@@ -1,7 +1,7 @@
 open Board
 open State
 
-let depth = 3
+let depth = 4
 
 (** The minmax tree of possible moves is represented as a 7-ary tree where
     the root node is the current state and the children of a node are the states
@@ -13,44 +13,62 @@ let depth = 3
 *)
 type minmaxtree = Node of int * State.t * int * minmaxtree list
 
+(** [generate_minmax_tree st] is a minmax tree based on the current state [st].
+    Takes into account whether a column is full, and stops tree if column is 
+    full. *)
 let generate_minmax_tree st = 
   (*gen_children *)
   let rec gen_children curr_state d =
+
     let rec loop_norm count = 
       if count = 7 then []
       else 
         match go count curr_state with
-        | Legal res -> 
-          if check_win (board res)=None then
-            Node (-100, res, count, gen_children res (d + 1))
-            :: (loop_norm (count + 1))
-          else Node (100, res, count, []) :: (loop_norm (count + 1))
-        | Illegal -> (loop_norm (count + 1)) in 
+
+        |Legal res -> 
+          let check_win_res = check_win (board res) in
+          if check_win_res=None then
+            Node (-100, res, count, gen_children res (d+1))
+            ::(loop_norm (count+1))
+          else if check_win_res=(Some (B))
+          then Node (100, res, count, [])::(loop_norm (count+1))
+          else Node (-100, res, count, [])::(loop_norm (count+1))
+        |Illegal -> (loop_norm (count + 1)) in 
+
+
     let rec loop_leaf count = 
       if count = 7 then []
       else 
         match go count curr_state with
-        | Legal res -> 
-          if check_win (board res) = None then
-            Node (Board.score (board res), res, count, gen_children res (d + 1))
-            :: (loop_norm (count + 1))
-          else Node (100, res, count, []) :: (loop_norm (count + 1))
-        | Illegal -> (loop_norm (count + 1)) in 
-    if d = depth then loop_leaf 0 (* create the leaf layer *)
+        |Legal res -> 
+          let check_win_res = check_win (board res) in
+          if check_win_res=None then
+            Node (Board.score (board res), res, count, [])
+            ::(loop_leaf (count+1))
+          else if check_win_res=(Some (B)) 
+          then Node (100, res, count, [])::(loop_leaf (count+1))
+          else Node (-100, res, count, [])::(loop_leaf (count+1))
+        |Illegal -> (loop_leaf (count + 1)) in 
+
+    if d = depth then loop_leaf 0(*create the leaf layer *)
+
     else loop_norm 0 in
   (* loop over 7 Nodes *)
   (* call gen_Children on the root *)
   Node (-100, st, -1, gen_children st 0)
 
+(** [eval_tree t] is the column number that the AI should play in, determined by
+    evaluating a minmax tree [t]. *)
 let eval_tree t = 
   let rec get_score children curr_score =
     match children with 
     | []-> curr_score
+    | Node (sc, st, m, c)::[]-> get_score c sc
     | Node (sc, st, m, c) :: t -> 
       if State.current_player st = B then 
-        max (get_score c sc) (get_score t curr_score)
+        min (get_score c sc) (get_score t curr_score)
       else 
-        min (get_score c sc) (get_score t curr_score) in
+        max (get_score c sc) (get_score t curr_score) in
   let scored_children root_children = List.map 
       (fun (Node (sc, st, m, c)) -> Node (get_score c sc, st, m, c)) 
       root_children in
@@ -59,25 +77,12 @@ let eval_tree t =
              (fun (best_sc, best_move) (Node (sc, st, move, c)) ->
                 (if sc > best_sc then (sc, move)
                  else (best_sc, best_move))
-             ) (-100, -1) scored_root_children) with
+             ) (-1000000, -1) scored_root_children) with
     | (sc, m)-> m in
   let Node (sc, state, move, children) = t in
   extract_best_scoring_move (scored_children (children))
 
-(* let get_state_c minmaxtree = 
-   match minmaxtree with 
-   | Node (_, st, _, c) -> (st, c)
-
-
-   (** [minimax state depth a_or_not] *)
-   let minimax minmaxtree depth a_or_not : int = 
-   let state = match get_state_c minmaxtree with
-    | (st, c) -> st in 
-   if depth == 0 then Board.score state.board
-   else if a_or_not then let maxEval = -infinity in
-    let rec minimax_children state = 
-      match  *)
-
-(** returns a state after the AI makes a move *)
+(** [make_move_ai st] is a result [Legal st'] where [st'] is the state with 
+    the new move determined by [eval_tree t]. *)
 let make_move_ai (st:State.t) : State.result = 
   State.go (eval_tree (generate_minmax_tree st)) st
