@@ -3,6 +3,7 @@ open Board
 open State
 open Command
 
+(** [board_list_print lst] prints out a board in form of a list. *)
 let rec board_list_print lst = 
   let rec elt_print e = 
     match e with
@@ -24,10 +25,32 @@ let make_test_board_get_as_list
   name >:: (fun _ -> assert_equal 
                expected_output (get_as_list board) ~printer:board_list_print)
 
+(** [make_test_board_check_win name board expected_output] 
+    constructs an OUnit test named [name] that asserts the quality of 
+    [expected_output] with [check_win board]. *)
+let make_test_board_check_win
+    (name: string)
+    (board: Board.t)
+    (expected_output: color option) : test =
+  name >:: (fun _ -> assert_equal
+               expected_output (check_win board))
 
 let empty_board = Board.empty
 let board1 = Board.make_move empty_board 0 R
 let board2 = Board.make_move board1 0 B
+let board3 = Board.make_move board1 1 R
+let board4 = Board.make_move board3 2 R
+let board5 = Board.make_move board4 3 R
+let board6 = Board.make_move board1 0 R
+let board7 = Board.make_move board6 0 R
+let board8 = Board.make_move board7 0 R 
+let board9 = Board.make_move board8 1 B
+let board10 = Board.make_move board9 1 B
+let board11 = Board.make_move board10 1 R
+let board12 = Board.make_move board11 2 B
+let board13 = Board.make_move board12 2 R
+let board14 = Board.make_move board13 3 R
+
 
 let board_tests = [
   make_test_board_get_as_list "bd_test_empty" empty_board 
@@ -45,9 +68,15 @@ let board_tests = [
      [Emp;Emp;Emp;Emp;Emp;Emp];
      [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp];
      [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp]];
+  make_test_board_check_win "bd_test_check_win1" board5
+    (Some R);
+  make_test_board_check_win "bd_test_check_win2" board1 None;
+  make_test_board_check_win "bd_test_check_win3" board8 (Some R);
+  make_test_board_check_win "bd_test_check_win4" board14 (Some R);
+
 ]
 
-
+(** [result_match] returns a state given an option result. *)
 let result_match = function
   | Legal c -> c
   | Illegal -> State.init_state
