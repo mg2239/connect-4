@@ -29,6 +29,7 @@ let empty_board = Board.empty
 let board1 = Board.make_move empty_board 0 R
 let board2 = Board.make_move board1 0 B
 
+
 let board_tests = [
   make_test_board_get_as_list "bd_test_empty" empty_board 
     [[Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp];
@@ -47,7 +48,6 @@ let board_tests = [
      [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp]];
 ]
 
-
 let result_match = function
   | Legal c -> c
   | Illegal -> State.init_state
@@ -57,6 +57,17 @@ let st2_result = State.go 0 init_st
 let st2 = result_match st2_result
 let st3_result = State.go 1 st2
 let st3 = result_match st3_result
+
+(**CHECK THIS OUT IMAAN WE NEED A TEST FOR A FULL BOARD *)
+let board_function_tests = [
+   "board test_is_full 1" >:: (fun _ ->
+      assert_equal (Board.is_full empty_board) false); 
+   "board test_is_full 2" >:: (fun _ ->
+      assert_equal (Board.is_full board1) false);
+    "board test_is_full 2" >:: (fun _ ->
+      assert_equal (Board.is_full board2) false);
+  ]
+
 
 let state_tests = [
   "board test 1" >:: (fun _ ->
@@ -116,7 +127,6 @@ let command_tests =
     make_test_command_malformed "cmd_test11" "help me";
     make_test_command_malformed "cmd_test12" "go 7 R";
     make_test_command_malformed "cmd_test13" "B";
-
   ]
 
 let suite =

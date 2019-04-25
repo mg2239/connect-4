@@ -39,7 +39,7 @@ let make_move board column color =
   (new_board.(column).(find_top (new_board.(column)))<-color);  new_board
 
 (**[get_as_list] takes in a [board] and produces a list
-representation of its data *))
+representation of its data *)
 let get_as_list (board: color array array) = 
   let rec loop acc =
     if acc = 7 then []
@@ -48,7 +48,7 @@ let get_as_list (board: color array array) =
 
 (** [score_2x2] takes in a [grid] and produces an [int]
 representing the total number of two-in-a-rows held by the AI
-subtracted by the two-in-a-rows held by the player within a 2x2 grid.*)
+subtracted by the two-in-a-rows held by the playser within a 2x2 grid.*)
 let score_2x2 grid =
   let check_rows grid = 
     let rec loop r acc =
