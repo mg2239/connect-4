@@ -18,7 +18,7 @@ let rec board_list_print lst =
 (** [make_test_board_get_as_list name board expected_output] 
     constructs an OUnit test named [name] that asserts the quality of 
     [expected_output] with [get_as_list board] *)
-let make_test_board_get_as_list
+let make_test_board_get_as_list 
     (name: string)
     (board: Board.t)
     (expected_output: (color list) list) : test =
