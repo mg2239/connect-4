@@ -45,6 +45,24 @@ let make_test_board_score
   name >:: (fun _ -> assert_equal
                expected_output (score board) ~printer:string_of_int)
 
+let generate_full_board = 
+  let emp_board = Board.empty in
+  let rec loop count board color= 
+    if count = 42 then board
+    else 
+      let next_color = (
+        if color = R then B
+        else R
+      ) in
+      loop (count+1) (Board.make_move board (count mod 7) color) next_color in 
+  loop 0 emp_board R
+
+let test_full_board  
+    (name: string)
+    (board: Board.t)
+    (expected_output: bool) : test = 
+  name>:: (fun _ -> assert_equal expected_output (is_full board))
+
 let empty_board = Board.empty
 let board1 = Board.make_move empty_board 0 R
 let board2 = Board.make_move board1 0 B
@@ -60,6 +78,8 @@ let board11 = Board.make_move board10 1 R
 let board12 = Board.make_move board11 2 B
 let board13 = Board.make_move board12 2 R
 let board14 = Board.make_move board13 3 R
+let board_full = generate_full_board
+
 
 let board_tests = [
   make_test_board_get_as_list "bd_test_empty" empty_board 
@@ -92,6 +112,14 @@ let board_tests = [
       assert_equal (Board.is_full board1) false);
   "board test_is_full 2" >:: (fun _ ->
       assert_equal (Board.is_full board2) false);
+  test_full_board "not full board 0" empty_board (false);
+  test_full_board "not full board 1" board1 (false);
+  test_full_board "not full board 2" board2 (false);
+  test_full_board "not full board 3" board3 (false);
+  test_full_board "not full board 4" board4 (false);
+  test_full_board "not full board 5" board5 (false);
+  test_full_board "not full board 6" board6 (false);
+  test_full_board "full board" board_full (true);
 ]
 
 (** [result_match] returns a state given an option result. *)
