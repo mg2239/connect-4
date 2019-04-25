@@ -61,7 +61,7 @@ let score_2x2 grid =
   let check_cols grid = 
     let rec loop c acc = 
       if c = 2 then acc
-      else if (grid.(c).(0) = grid.(c).(1)) && 
+      else if grid.(c).(0) = grid.(c).(1) && 
               grid.(c).(0) <> Emp
       then begin
         match grid.(c).(0) with
@@ -72,7 +72,7 @@ let score_2x2 grid =
       else loop (c + 1) acc in 
     loop 0 0 in
   let check_diags grid = 
-    if (grid.(0).(1) = grid.(1).(0)) && 
+    if grid.(0).(1) = grid.(1).(0) && 
        grid.(0).(1) <> Emp
     then begin
       match grid.(0).(1) with
@@ -91,13 +91,76 @@ let score_2x2 grid =
     else 0 in
   check_rows grid + check_cols grid + check_diags grid
 
+let score_3x3 grid =
+  let check_rows grid = 
+    let rec loop r acc =
+      if r = 3 then acc
+      else if grid.(0).(r) = grid.(1).(r) && 
+              grid.(1).(r) = grid.(2).(r) && 
+              grid.(0).(r) <> Emp
+      then begin
+        match grid.(0).(r) with
+        | R -> loop (r + 1) (acc - 5)
+        | B -> loop (r + 1) (acc + 5)
+        | _ -> failwith "invalid"
+      end 
+      else loop (r + 1) acc in 
+    loop 0 0 in
+  let check_cols grid = 
+    let rec loop c acc = 
+      if c = 3 then acc
+      else if grid.(c).(0) = grid.(c).(1) && 
+              grid.(c).(1) = grid.(c).(2) && 
+              grid.(c).(0) <> Emp
+      then begin
+        match grid.(c).(0) with
+        | R -> loop (c + 1) (acc - 5)
+        | B -> loop (c + 1) (acc + 5)
+        | _ -> failwith "invalid"
+      end 
+      else loop (c + 1) acc in 
+    loop 0 0 in
+  let check_diags grid = 
+    if grid.(0).(1) = grid.(1).(1) && 
+       grid.(1).(1) = grid.(2).(0) && 
+       grid.(0).(1) <> Emp
+    then begin
+      match grid.(0).(1) with
+      | R -> -5
+      | B -> 5
+      | _ -> failwith "invalid"
+    end 
+    else if grid.(0).(0) = grid.(1).(1) && 
+            grid.(1).(1) = grid.(2).(2) && 
+            grid.(0).(0) <> Emp
+    then begin
+      match grid.(0).(0) with
+      | R -> -5
+      | B -> 5
+      | _ -> failwith "invalid"
+    end 
+    else 0 in
+  check_rows grid + check_cols grid + check_diags grid
+
 let score_1x2 grid = 
-  if (grid.(0).(0) = grid.(0).(1)) && 
+  if grid.(0).(0) = grid.(0).(1) && 
      grid.(0).(0) <> Emp
   then begin
     match grid.(0).(0) with
     | R -> -1
     | B -> 1
+    | _ -> failwith "invalid"
+  end 
+  else 0
+
+let score_1x3 grid = 
+  if grid.(0).(0) = grid.(0).(1) && 
+     grid.(0).(1) = grid.(0).(2) &&
+     grid.(0).(0) <> Emp
+  then begin
+    match grid.(0).(0) with
+    | R -> -5
+    | B -> 5
     | _ -> failwith "invalid"
   end 
   else 0
@@ -118,17 +181,17 @@ let check_win (board:color array array) =
   let check_cols grid = 
     let rec loop c = 
       if c = 4 then None
-      else if (grid.(c).(0) = grid.(c).(1)) && 
-              (grid.(c).(1) = grid.(c).(2)) && 
-              (grid.(c).(2) = grid.(c).(3)) && 
+      else if grid.(c).(0) = grid.(c).(1) && 
+              grid.(c).(1) = grid.(c).(2) && 
+              grid.(c).(2) = grid.(c).(3) && 
               grid.(c).(0) <> Emp
       then Some (grid.(c).(0))
       else loop (c + 1) in 
     loop 0 in
   let check_diags grid = 
-    if (grid.(0).(3) = grid.(1).(2)) && 
-       (grid.(1).(2) = grid.(2).(1)) && 
-       (grid.(2).(1) = grid.(3).(0)) && 
+    if grid.(0).(3) = grid.(1).(2) && 
+       grid.(1).(2) = grid.(2).(1) && 
+       grid.(2).(1) = grid.(3).(0) && 
        grid.(0).(3) <> Emp
     then Some (grid.(0).(3))
     else if grid.(0).(0) = grid.(1).(1) && 
@@ -158,24 +221,37 @@ let score board =
     let x_sub = Array.sub arr x_start x_len in
     ((for x = 0 to x_len - 1
       do x_sub.(x) <- Array.sub x_sub.(x) y_start y_len done); x_sub) in
-  let rec loop col row acc = 
+  let rec loop_2x2 col row acc = 
     if col > 4 then acc
-    else if row > 6 then loop (col + 2) 0 acc
+    else if row > 6 then loop_2x2 (col + 2) 0 acc
     else begin
       if row <> 6 then begin
         let subgrid = sub_array_2d board row 2 col 2 in
-        loop col (row + 2) (acc + score_2x2 subgrid)
+        loop_2x2 col (row + 2) (acc + score_2x2 subgrid)
       end
       else begin 
         let subgrid = sub_array_2d board row 1 col 2 in
-        loop col (row + 1) (acc + score_1x2 subgrid)
+        loop_2x2 col (row + 1) (acc + score_1x2 subgrid)
+      end
+    end in 
+  let rec loop_3x3 col row acc = 
+    if col > 4 then acc
+    else if row > 6 then loop_3x3 (col + 3) 0 acc
+    else begin
+      if row <> 6 then begin
+        let subgrid = sub_array_2d board row 3 col 3 in
+        loop_3x3 col (row + 3) (acc + score_3x3 subgrid)
+      end
+      else begin 
+        let subgrid = sub_array_2d board row 1 col 3 in
+        loop_3x3 col (row + 1) (acc + score_1x3 subgrid)
       end
     end in 
   let win_score board = 
     match check_win board with 
-    | Some c -> if c = R then -50 else 50
+    | Some c -> if c = R then -50 else 40
     | None -> 0 in
-  loop 0 0 0 + win_score board
+  loop_2x2 0 0 0 + loop_3x3 0 0 0 + win_score board
 
 (**  *)
 let filled_slots_helper column  = 
