@@ -35,6 +35,7 @@ let make_test_board_check_win
   name >:: (fun _ -> assert_equal
                expected_output (check_win board))
 
+
 (** [make_test_board_score name board expected_output] 
     constructs an OUnit test named [name] that asserts the quality of 
     [expected_output] with [score board]. *)
@@ -45,6 +46,7 @@ let make_test_board_score
   name >:: (fun _ -> assert_equal
                expected_output (score board) ~printer:string_of_int)
 
+(**[generate_full_board] is a board with all slots filled with R and B disks*)
 let generate_full_board = 
   let emp_board = Board.empty in
   let rec loop count board color= 
@@ -57,11 +59,26 @@ let generate_full_board =
       loop (count+1) (Board.make_move board (count mod 7) color) next_color in 
   loop 0 emp_board R
 
+(** [test_full_board name board expected_output] 
+    constructs an OUnit test named [name] that asserts the quality of 
+    [expected_output] with [is_full board]. *)
 let test_full_board  
     (name: string)
     (board: Board.t)
     (expected_output: bool) : test = 
   name>:: (fun _ -> assert_equal expected_output (is_full board))
+
+
+(** [make_test_board_filled_slots name board expected_output] 
+    constructs an OUnit test named [name] that asserts the quality of 
+    [expected_output] with [filled_slots board]. *)
+let make_test_board_filled_slots
+    (name: string)
+    (board: Board.t)
+    (expected_output: int) : test =
+  name >:: (fun _ -> assert_equal
+               expected_output (filled_slots board))
+
 
 let empty_board = Board.empty
 let board1 = Board.make_move empty_board 0 R
@@ -79,7 +96,6 @@ let board12 = Board.make_move board11 2 B
 let board13 = Board.make_move board12 2 R
 let board14 = Board.make_move board13 3 R
 let board_full = generate_full_board
-
 
 let board_tests = [
   make_test_board_get_as_list "bd_test_empty" empty_board 
@@ -102,6 +118,9 @@ let board_tests = [
   make_test_board_check_win "bd_test_check_win2" board1 None;
   make_test_board_check_win "bd_test_check_win3" board8 (Some R);
   make_test_board_check_win "bd_test_check_win4" board14 (Some R);
+  make_test_board_check_win "bd_test_check_win5" board2 None;
+  make_test_board_check_win "bd_test_check_win6" board3 None;
+  make_test_board_check_win "bd_test_check_win7" board4 None;
   make_test_board_score "bd_test_score1" board1 0;
   make_test_board_score "bd_test_score2" board2 0;
   make_test_board_score "bd_test_score3" board3 (-1);
@@ -120,6 +139,9 @@ let board_tests = [
   test_full_board "not full board 5" board5 (false);
   test_full_board "not full board 6" board6 (false);
   test_full_board "full board" board_full (true);
+  make_test_board_filled_slots "bd_test_filled_slots1" board14 10;
+  make_test_board_filled_slots "bd_test_filled_slots2" empty_board 0;
+  make_test_board_filled_slots "bd_test_filled_slots3" board_full 42;
 ]
 
 (** [result_match] returns a state given an option result. *)
