@@ -97,7 +97,8 @@ let rec game_2 state =
 (** [choose_difficulty ()] prompts user to choose the difficulty of the
     1 player game. *)
 let rec choose_difficulty () = 
-  print_string "\nChoose difficulty: Easy (1) | Medium (2) | Hard (3) | Extreme (4)\n";
+  print_string 
+    "\nChoose difficulty: Easy (1) | Medium (2) | Hard (3) | Extreme (4)\n";
   print_string "> ";
   match read_line() with
   | "Easy" | "E" | "1" -> game_1 (State.init_state) 2

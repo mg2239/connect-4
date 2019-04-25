@@ -29,8 +29,8 @@ val empty : t
 val ascii_art : t -> string
 
 (** [make_move board column color] is the board resulting from dropping a disk
-    of color [color] into the column numbered [column] where [column] is a number
-    in the range [0..6] counting from the left. 
+    of color [color] into the column numbered [column] where [column] is a 
+    number in the range [0..6] counting from the left. 
     Example: [make_move empty 0 R] is [b] where [b] has a red disk in column 0.
     @raise Failure if [column] is greater than 6.
     @param board The game board.
@@ -40,8 +40,8 @@ val ascii_art : t -> string
 val make_move : t -> int -> color -> t
 
 (** [get_as_list board] is the current state of the board represented as a 
-    2 dimensional list of type [color]. The head of a column list is the top disk
-    in that list. Each column list has a length of at most 6. 
+    2 dimensional list of type [color]. The head of a column list is the top 
+    disk in that list. Each column list has a length of at most 6. 
     Example: [get_as_list Board.empty] is 
              [[[Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp];
               [Emp;Emp;Emp;Emp;Emp;Emp];[Emp;Emp;Emp;Emp;Emp;Emp];
