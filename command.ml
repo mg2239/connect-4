@@ -11,7 +11,6 @@ type command =
 
 (** Raised when an empty or malformed command is parsed. *)
 exception Malformed
-
 let parse str = 
   let str_lst = String.split_on_char ' ' str in
   let check_empty str = str <> "" in 
