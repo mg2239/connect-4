@@ -94,5 +94,11 @@ val is_full_column : t -> int -> bool
     @return The color as a string. *)
 val color_string : color -> string
 
-(** *)
+(** [score t] is the value that represents whether the player
+    or the AI is currently winning in the current game state [t].
+    Example: [score t] is ["-1"]
+    Raises: None.
+    @param t The current game state.
+    @return a positive int if the AI is winning or a negative value
+    if the player is winning. *)
 val score : t -> int

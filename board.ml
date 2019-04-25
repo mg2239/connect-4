@@ -9,7 +9,7 @@ type color = R | B | Emp
 *)
 type t = color array array
 
-(**  *)
+(** [empty] represents an empty gameboard*)
 let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|]; 
               [|Emp; Emp; Emp; Emp; Emp; Emp|]; 
               [|Emp; Emp; Emp; Emp; Emp; Emp|]; 
@@ -18,7 +18,8 @@ let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|];
               [|Emp; Emp; Emp; Emp; Emp; Emp|] |]
 
-(**  *)
+(** [board_copy] takes in a [board] and produces a replica
+board. *)
 let board_copy board =
   let new_board = Array.make 7 (Array.make 6 Emp) in 
   (for x=0 to 6 do
@@ -37,13 +38,17 @@ let make_move board column color =
     loop 0 in
   (new_board.(column).(find_top (new_board.(column)))<-color);  new_board
 
+(**[get_as_list] takes in a [board] and produces a list
+representation of its data *))
 let get_as_list (board: color array array) = 
   let rec loop acc =
     if acc = 7 then []
     else Array.to_list(board.(acc))::(loop (acc+1)) in
   loop 0
 
-(**  *)
+(** [score_2x2] takes in a [grid] and produces an [int]
+representing the total number of two-in-a-rows held by the AI
+subtracted by the two-in-a-rows held by the player within a 2x2 grid.*)
 let score_2x2 grid =
   let check_rows grid = 
     let rec loop r acc =
@@ -91,6 +96,9 @@ let score_2x2 grid =
     else 0 in
   check_rows grid + check_cols grid + check_diags grid
 
+(** [score_1x2] takes in a [grid] and produces an [int]
+representing the total number of two-in-a-rows held by the AI
+subtracted by the three-in-a-rows held by the player within a 1x2 grid.*)
 let score_1x2 grid = 
   if (grid.(0).(0) = grid.(0).(1)) && 
      grid.(0).(0) <> Emp
@@ -153,6 +161,11 @@ let check_win (board:color array array) =
     end in
   loop 0 0
 
+(** [score board] takes in a [board] and produces an [int]
+representing the total number of three-in-a-rows held by the AI
+subtracted by the three-in-a-rows held by the player within the current
+game state. A ten-point bonus is added to the score if the AI has produced
+a game-winning state.*)
 let score board =
   let sub_array_2d arr x_start x_len y_start y_len = 
     let x_sub = Array.sub arr x_start x_len in
@@ -177,7 +190,7 @@ let score board =
     | None -> 0 in
   loop 0 0 0 + win_score board
 
-(**  *)
+
 let filled_slots_helper column  = 
   let rec loop counter =
     if counter = 6 then 0
