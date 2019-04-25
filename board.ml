@@ -1,11 +1,12 @@
 type color = R | B | Emp
 
-(** AF: the board is represented as a 2d array of size 7x6 (columns x rows) where
-    each array element represents a position in th board. Each array element is 
-    of type color.
-    RI: In a single column, there cannot be an Emp sandwiched between two colored
-    disks. That is, the subarrays R; Emp; R, R; Emp B, B; Emp; R, B; Emp; B, are
-    all invalid 
+(** AF: the board is represented as a 2d array of size 7x6 (columns x rows) 
+    where each array element represents a position in th board. 
+    Each array element is of type color.
+    RI: In a single column, 
+    there cannot be an Emp sandwiched between two colored disks. 
+    That is, the subarrays R; Emp; R, R; Emp B, B; Emp; R, B; Emp; B, 
+    are all invalid.
 *)
 type t = color array array
 
@@ -21,15 +22,16 @@ let empty = [|[|Emp; Emp; Emp; Emp; Emp; Emp|];
 
 
 (** [board_copy] takes in a [board] and produces a replica
-    board. Creates a fresh 2 dimensional array with the same elements as [board] *)
+    board. Creates a fresh 2 dimensional array with the same elements as 
+    [board] *)
 let board_copy board =
   let new_board = Array.make 7 (Array.make 6 Emp) in 
   (for x=0 to 6 do
      new_board.(x) <- (Array.copy (board.(x))) done); new_board
 
 (** [make_move board column color] is the board resulting from dropping a disk
-    of color [color] into the column numbered [column] where [column] is a number
-    in the range [0..6] counting from the left. *)
+    of color [color] into the column numbered [column] where [column] is a 
+    number in the range [0..6] counting from the left. *)
 let make_move board column color = 
   (*create a new copy of [board] so original board is unchanged, necessary 
     because [board] is a mutable array *)
@@ -313,8 +315,8 @@ let score board =
   loop_2x2 0 0 0 + loop_3x3 0 0 0 + win_score board
 
 (** [filled_slots_helper column] is the number of filled slots, that is non 
-    [Emp] postions in the color array [column] which is a single column in a board
-    of type t*)
+    [Emp] postions in the color array [column] which is a single column in a 
+    board of type t. *)
 let filled_slots_helper column  = 
   let rec loop counter =
     if counter = 6 then 0
