@@ -1,6 +1,9 @@
 open Aiplayer
 open Board
 
+(*[help_msg] is the message describing 
+how to play the Connect Four game
+**)
 let help_msg = 
   "\nIn Connect Four, the object of the game is to get " ^
   "four of your game pieces in a row either vertically, " ^
@@ -91,6 +94,9 @@ let rec game_2 state =
         end
     end
 
+(*[start_game state] takes in a unit and initializes the game according
+to the player's preferences for game mode and difficulty
+@param () is of type unit. **)
 let rec start_game () = 
   print_string ("\nChoose game mode: 1 Player | 2 Player\n");
   print_string ("> ");
