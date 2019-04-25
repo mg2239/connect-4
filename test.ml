@@ -35,6 +35,16 @@ let make_test_board_check_win
   name >:: (fun _ -> assert_equal
                expected_output (check_win board))
 
+(** [make_test_board_score name board expected_output] 
+    constructs an OUnit test named [name] that asserts the quality of 
+    [expected_output] with [score board]. *)
+let make_test_board_score
+    (name: string)
+    (board: Board.t)
+    (expected_output: int) : test =
+  name >:: (fun _ -> assert_equal
+               expected_output (score board) ~printer:string_of_int)
+
 let empty_board = Board.empty
 let board1 = Board.make_move empty_board 0 R
 let board2 = Board.make_move board1 0 B
@@ -73,7 +83,10 @@ let board_tests = [
   make_test_board_check_win "bd_test_check_win2" board1 None;
   make_test_board_check_win "bd_test_check_win3" board8 (Some R);
   make_test_board_check_win "bd_test_check_win4" board14 (Some R);
-
+  make_test_board_score "bd_test_score1" board1 0;
+  make_test_board_score "bd_test_score2" board2 0;
+  make_test_board_score "bd_test_score3" board3 (-1);
+  make_test_board_score "bd_test_score4" board4 (-6);
 ]
 
 (** [result_match] returns a state given an option result. *)
