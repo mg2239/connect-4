@@ -35,6 +35,17 @@ let make_test_board_check_win
   name >:: (fun _ -> assert_equal
                expected_output (check_win board))
 
+
+(** [make_test_board_score name board expected_output] 
+    constructs an OUnit test named [name] that asserts the quality of 
+    [expected_output] with [score board]. *)
+let make_test_board_score
+    (name: string)
+    (board: Board.t)
+    (expected_output: int) : test =
+  name >:: (fun _ -> assert_equal
+               expected_output (score board) ~printer:string_of_int)
+
 (**[generate_full_board] is a board with all slots filled with R and B disks*)
 let generate_full_board = 
   let emp_board = Board.empty in
@@ -96,9 +107,19 @@ let board_tests = [
   make_test_board_check_win "bd_test_check_win2" board1 None;
   make_test_board_check_win "bd_test_check_win3" board8 (Some R);
   make_test_board_check_win "bd_test_check_win4" board14 (Some R);
-  make_test_board_check_win "bd_test_check_win2" board2 None;
-  make_test_board_check_win "bd_test_check_win2" board3 None;
-  make_test_board_check_win "bd_test_check_win2" board4 None;
+  make_test_board_check_win "bd_test_check_win5" board2 None;
+  make_test_board_check_win "bd_test_check_win6" board3 None;
+  make_test_board_check_win "bd_test_check_win7" board4 None;
+  make_test_board_score "bd_test_score1" board1 0;
+  make_test_board_score "bd_test_score2" board2 0;
+  make_test_board_score "bd_test_score3" board3 (-1);
+  make_test_board_score "bd_test_score4" board4 (-6);
+  "board test_is_full 1" >:: (fun _ ->
+      assert_equal (Board.is_full empty_board) false); 
+  "board test_is_full 2" >:: (fun _ ->
+      assert_equal (Board.is_full board1) false);
+  "board test_is_full 2" >:: (fun _ ->
+      assert_equal (Board.is_full board2) false);
   test_full_board "not full board 0" empty_board (false);
   test_full_board "not full board 1" board1 (false);
   test_full_board "not full board 2" board2 (false);
@@ -119,17 +140,6 @@ let st2_result = State.go 0 init_st
 let st2 = result_match st2_result
 let st3_result = State.go 1 st2
 let st3 = result_match st3_result
-
-(**CHECK THIS OUT IMAAN WE NEED A TESTS FOR A FULL BOARD *)
-let board_function_tests = [
-  "board test_is_full 1" >:: (fun _ ->
-      assert_equal (Board.is_full empty_board) false); 
-  "board test_is_full 2" >:: (fun _ ->
-      assert_equal (Board.is_full board1) false);
-  "board test_is_full 2" >:: (fun _ ->
-      assert_equal (Board.is_full board2) false);
-]
-
 
 let state_tests = [
   "board test 1" >:: (fun _ ->
