@@ -1,0 +1,157 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Board" rel="Chapter" href="Board.html">
+<link title="Command" rel="Chapter" href="Command.html">
+<link title="State" rel="Chapter" href="State.html">
+<link title="Main" rel="Chapter" href="Main.html">
+<link title="Authors" rel="Chapter" href="Authors.html"><title>Index of values</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Index of values</h1>
+<table>
+<tr><td align="left"><div>A</div></td></tr>
+<tr><td><a href="Board.html#VALascii_art">ascii_art</a> [<a href="Board.html">Board</a>]</td>
+<td><div class="info">
+<p><code class="code">ascii_art board</code> is a string containing an ASCII art representation
+    of <code class="code">board</code> that can be printed to the terminal during gameplay
+    Example: <code class="code">ascii_art Board.empty</code> is
+             <code class="code">"O  O  O  O  O  O  \n
+               O  O  O  O  O  O  \n
+               O  O  O  O  O  O  \n
+               O  O  O  O  O  O  \n
+               O  O  O  O  O  O  \n
+               O  O  O  O  O  O  \n"</code>
+    Raises: None.</p>
+
+</div>
+</td></tr>
+<tr><td align="left"><div>B</div></td></tr>
+<tr><td><a href="State.html#VALboard">board</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+<p><code class="code">board st</code> is the board of the game state <code class="code">st</code>.</p>
+
+</div>
+</td></tr>
+<tr><td align="left"><div>C</div></td></tr>
+<tr><td><a href="Board.html#VALcheck_win">check_win</a> [<a href="Board.html">Board</a>]</td>
+<td><div class="info">
+<p><code class="code">check_win board</code> is <code class="code">Some c</code> if the color <code class="code">c</code> has won the game 
+    represented by <code class="code">board</code>, or <code class="code">None</code> if no one has won the game.</p>
+
+</div>
+</td></tr>
+<tr><td><a href="Board.html#VALcolor_string">color_string</a> [<a href="Board.html">Board</a>]</td>
+<td><div class="info">
+<p><code class="code">color_string color</code> is the color in string format.</p>
+
+</div>
+</td></tr>
+<tr><td><a href="State.html#VALcurrent_player">current_player</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+<p><code class="code">current_player st</code> is the current player of the game state <code class="code">st</code>.</p>
+
+</div>
+</td></tr>
+<tr><td align="left"><div>E</div></td></tr>
+<tr><td><a href="Board.html#VALempty">empty</a> [<a href="Board.html">Board</a>]</td>
+<td><div class="info">
+<p><code class="code">empty</code> is the empty board where no moves have been made.</p>
+
+</div>
+</td></tr>
+<tr><td align="left"><div>F</div></td></tr>
+<tr><td><a href="Board.html#VALfilled_slots">filled_slots</a> [<a href="Board.html">Board</a>]</td>
+<td><div class="info">
+<p><code class="code">filled_slots board</code> is the number of slots (positions) in the board
+    that have a disk in it.</p>
+
+</div>
+</td></tr>
+<tr><td align="left"><div>G</div></td></tr>
+<tr><td><a href="State.html#VALgame_state">game_state</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+<p><code class="code">game_state st</code> is whether a player has gotten four in a row in game
+    state <code class="code">st</code>.</p>
+
+</div>
+</td></tr>
+<tr><td><a href="Board.html#VALget_as_list">get_as_list</a> [<a href="Board.html">Board</a>]</td>
+<td><div class="info">
+<p><code class="code">get_as_list board</code> is the current state of the board represented as a 
+    2 dimensional list of type <code class="code">color</code>.</p>
+
+</div>
+</td></tr>
+<tr><td><a href="State.html#VALgo">go</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+<p><code class="code">go col st</code> is <code class="code">r</code> if attempting to place a disk in column <code class="code">col</code> of the 
+    board in state <code class="code">st</code> results in <code class="code">r</code>.</p>
+
+</div>
+</td></tr>
+<tr><td align="left"><div>H</div></td></tr>
+<tr><td><a href="Authors.html#VALhours_worked">hours_worked</a> [<a href="Authors.html">Authors</a>]</td>
+<td><div class="info">
+<p><code class="code">hours_worked</code> is a list of the number of hours each team member
+    worked on this assignment.</p>
+
+</div>
+</td></tr>
+<tr><td align="left"><div>I</div></td></tr>
+<tr><td><a href="State.html#VALinit_state">init_state</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+<p><code class="code">init_state</code> is the initial state of the game.</p>
+
+</div>
+</td></tr>
+<tr><td><a href="Board.html#VALis_full">is_full</a> [<a href="Board.html">Board</a>]</td>
+<td><div class="info">
+<p><code class="code">is_full board</code> is <code class="code">true</code> if all the slots (positions) in <code class="code">board</code> have
+    disks in them.</p>
+
+</div>
+</td></tr>
+<tr><td><a href="Board.html#VALis_full_column">is_full_column</a> [<a href="Board.html">Board</a>]</td>
+<td><div class="info">
+<p><code class="code">is_full_column board c</code> is <code class="code">true</code> if no more disks can be dropped into 
+    column <code class="code">c</code>
+    Example: <code class="code">is_full_column Board.empty 0</code> is <code class="code">false</code>.</p>
+
+</div>
+</td></tr>
+<tr><td align="left"><div>M</div></td></tr>
+<tr><td><a href="Board.html#VALmake_move">make_move</a> [<a href="Board.html">Board</a>]</td>
+<td><div class="info">
+<p><code class="code">make_move board column color</code> is the board resulting from dropping a disk
+    of color <code class="code">color</code> into the column numbered <code class="code">column</code> where <code class="code">column</code> is a number
+    in the range <code class="code">0..6</code> counting from the left.</p>
+
+</div>
+</td></tr>
+<tr><td align="left"><div>N</div></td></tr>
+<tr><td><a href="State.html#VALnext_player">next_player</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+<p><code class="code">next_player st</code> is the next player of the game state <code class="code">st</code>.</p>
+
+</div>
+</td></tr>
+<tr><td align="left"><div>P</div></td></tr>
+<tr><td><a href="Command.html#VALparse">parse</a> [<a href="Command.html">Command</a>]</td>
+<td><div class="info">
+<p><code class="code">parse str</code> parses a player's input into a <code class="code">command</code>.</p>
+
+</div>
+</td></tr>
+</table>
+</body>
+</html>
