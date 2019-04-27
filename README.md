@@ -1,2 +1,2 @@
 # connect-4
-Command line OCaml Connect Four game
+The game of Connect Four, written in OCaml. Includes player vs. computer and player vs. player.
