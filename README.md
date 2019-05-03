@@ -2,7 +2,7 @@
 The game of Connect Four, written in OCaml.
 
 Play with another player:
-![](https://i.imgur.com/QsVQfma.gif)
+![](https://imgur.com/1hWMcoK.gif)
 
 Or against the computer:
-(gif to be added)
+![](https://imgur.com/DB5zQHu.gif)
