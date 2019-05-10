@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 3110-Midterm-Project
 =======
 # connect-4
@@ -24,4 +23,3 @@ Four levels of computer difficulty:
  - Medium
  - Hard
  - Extreme
->>>>>>> a8b227ad798189e7ad1e8df62e62adeb130977dd
