@@ -118,7 +118,7 @@ let rec start_game () =
 
 (** [main] prompts users with game instructions and starts the game. *)
 let main () = 
-  print_string ("\nWelcome to the 3110 Connect Four Game!\n" ^ help_msg); 
+  print_string ("\nWelcome to Connect Four!\n" ^ help_msg); 
   start_game ()
 
 (** Executes the main.byte file which runs the game. *)
