@@ -3,7 +3,9 @@ The game of Connect Four, written in OCaml.
 
 ## Installation
 This game plays through a Makefile, so Windows users will need to run through WSL.
+
 Required OCaml packages: ```ocamlbuild```, ```ocamlfind```
+### Directions
 1. Install OCaml
 2. Install required packages
 3. Download and unzip the files
