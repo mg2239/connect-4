@@ -1,5 +1,3 @@
-# 3110-Midterm-Project
-=======
 # connect-4
 The game of Connect Four, written in OCaml.
 
